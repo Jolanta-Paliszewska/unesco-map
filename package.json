@@ -30,6 +30,8 @@
   "devDependencies": {
     "@types/aphrodite": "^0.5.5",
     "@types/jest": "^18.1.1",
+    "@types/lodash": "^4.14.52",
+    "@types/ramda": "0.0.3",
     "@types/react": "^15.0.9",
     "@types/react-addons-test-utils": "^0.14.17",
     "@types/react-dom": "^0.14.23",
@@ -61,6 +63,7 @@
   },
   "dependencies": {
     "aphrodite": "^1.1.0",
+    "lodash": "^4.17.4",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-mapbox-gl": "^1.0.0",

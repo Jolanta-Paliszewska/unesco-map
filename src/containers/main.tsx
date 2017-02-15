@@ -1,26 +1,70 @@
 import * as React from 'react';
 import { Layer, Feature, Map } from 'react-mapbox-gl';
+import { debounce } from 'lodash';
+import { connect } from 'react-redux';
+import { getMonuments } from '../actions/monument';
+import { State, MonumentDict } from '../reducers/index';
 
-export class Main extends React.Component<void, void> {
+interface Props {
+  getMonuments: (latlng: number[][]) => any;
+  monuments: MonumentDict;
+}
+
+const styles = {
+  map: {
+    height: '100vh',
+    width: '100vw'
+  }
+};
+
+const mapStyle = 'mapbox://styles/mapbox/streets-v8';
+const accessToken = 'pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTV1ZzUwMDJwdzJrb2w0dXRmc2d0In0.p6GGlfyV-WksaDV_KdN27A';
+
+class Main extends React.Component<Props, void> {
+
+  private BoundsChanged = debounce((map: any) => {
+    const { _ne, _sw } = map.getBounds(); // tslint:disable-line
+    this.props.getMonuments([[_sw.lat, _sw.lng], [_ne.lat, _ne.lng]]);
+  }, 500, { leading: true });
+
+  private layout = {
+    'icon-image': 'marker-15'
+  };
+
+  private zoom = [6];
+
+  private onMonumentClick = (k: string) => {
+    console.log(this.props.monuments[k]);
+  };
 
   public render() {
+    const { monuments } = this.props;
+
     return (
       <Map
-        style="mapbox://styles/mapbox/streets-v8"
-        accessToken="pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTV1ZzUwMDJwdzJrb2w0dXRmc2d0In0.p6GGlfyV-WksaDV_KdN27A"
-        containerStyle={{
-          height: "100vh",
-          width: "100vw"
-        }}>
+        zoom={this.zoom}
+        style={mapStyle}
+        accessToken={accessToken}
+        containerStyle={styles.map}
+        onZoom={this.BoundsChanged}
+        onMove={this.BoundsChanged}>
           <Layer
             type="symbol"
             id="marker"
-            layout={{ "icon-image": "marker-15" }}>
-            <Feature coordinates={[-0.481747846041145, 51.3233379650232]}/>
+            layout={this.layout}>
+            {
+              Object.keys(monuments).map(k => (
+                <Feature onClick={this.onMonumentClick.bind(this, k)} coordinates={monuments[k].latlng} key={k}/>
+              ))
+            }
           </Layer>
       </Map>
     );
   }
 }
 
-export default Main;
+export default connect((state: State) => ({
+  monuments: state.monuments
+}), dispatch => ({
+  getMonuments: (latlng: number[][]) => dispatch(getMonuments(latlng))
+}))(Main);
