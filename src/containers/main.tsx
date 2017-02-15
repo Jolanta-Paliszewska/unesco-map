@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { Layer, Feature, Map } from 'react-mapbox-gl';
+import { MapEvent } from 'react-mapbox-gl/lib/map';
+
 import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
@@ -22,9 +24,9 @@ const accessToken = 'pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTV1ZzUwMDJwdzJrb2w0dXRm
 
 class Main extends React.Component<Props, void> {
 
-  private BoundsChanged = debounce((map: any) => {
-    const { _ne, _sw } = map.getBounds(); // tslint:disable-line
-    this.props.getMonuments([[_sw.lat, _sw.lng], [_ne.lat, _ne.lng]]);
+  private BoundsChanged = debounce<MapEvent>((map) => {
+    const bounds = map.getBounds();
+    this.props.getMonuments([[bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]]);
   }, 500, { leading: true });
 
   private layout = {
