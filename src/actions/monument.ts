@@ -12,8 +12,14 @@ const req = (url: string, method = 'GET', body?: any) => new Request(url, {
   body
 });
 
-const buildMonumentUrl = (latlng: number[][]) => (
-  `${api}?latitude=gte.${latlng[0][0]}&latitude=lte.${latlng[1][0]}&longitude=gte.${latlng[0][1]}&longitude=lte.${latlng[1][1]}` //tslint:disable-line
+const selectedFields = [
+  'id',
+  'latitude',
+  'longitude'
+];
+
+const buildMonumentUrl = (latlng: number[]) => (
+  `${api}?select=${selectedFields.join(',')}&latitude=gte.${latlng[0]}&longitude=gte.${latlng[1]}&latitude=lte.${latlng[2]}&longitude=lte.${latlng[3]}` //tslint:disable-line
 );
 
 const setMonuments = (data: any) => ({
@@ -21,7 +27,7 @@ const setMonuments = (data: any) => ({
   payload: data
 });
 
-export const getMonuments = (latlng: number[][]) => (dispatch: any) => (
+export const getMonuments = (latlng: number[]) => (dispatch: any) => (
   fetch(req(buildMonumentUrl(latlng)))
     .then(res => res.json())
     .then((data) => dispatch(setMonuments(data)))
