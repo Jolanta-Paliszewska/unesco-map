@@ -74,7 +74,7 @@ class Main extends React.Component<Props, void> {
     if (isGreaterThanMaxBounds) {
       this.props.getMonuments(boundsArr);
     }
-  }, 500, { leading: true });
+  }, 100, { leading: true });
 
   private onMonumentClick = (k: string) => {
     console.log(this.props.monuments[k]);
