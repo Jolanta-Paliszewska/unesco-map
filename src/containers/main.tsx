@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Layer, Feature, Map } from 'react-mapbox-gl';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
 
-import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
 import { State, MonumentDict } from '../reducers/index';
@@ -66,7 +65,7 @@ class Main extends React.Component<Props, void> {
     return isDifferent;
   };
 
-  private BoundsChanged = debounce<MapEvent>((map) => {
+  private BoundsChanged: MapEvent = (map) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
     const isGreaterThanMaxBounds = this.setMaxBounds(boundsArr);
@@ -74,7 +73,7 @@ class Main extends React.Component<Props, void> {
     if (isGreaterThanMaxBounds) {
       this.props.getMonuments(boundsArr);
     }
-  }, 100, { leading: true });
+  };
 
   private onMonumentClick = (k: string) => {
     console.log(this.props.monuments[k]);
