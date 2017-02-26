@@ -1,6 +1,6 @@
 import { SET_MONUMENTS } from '../constants/monument';
 
-const api = 'https://unesco-api.balek.io/monuments';
+const api = 'https://unesco-api.balek.io/api/monuments';
 
 const req = (url: string, method = 'GET', body?: any) => new Request(url, {
   method,
@@ -15,7 +15,8 @@ const req = (url: string, method = 'GET', body?: any) => new Request(url, {
 const selectedFields = [
   'id',
   'latitude',
-  'longitude'
+  'longitude',
+  'site'
 ];
 
 const buildMonumentUrl = (latlng: number[]) => (

@@ -4,12 +4,20 @@ import { MapEvent } from 'react-mapbox-gl/lib/map';
 
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
-import { State, MonumentDict } from '../reducers/index';
+import { MonumentDict, State } from '../reducers/index';
+import SidepanMotion from './sidepanMotion';
+const mapStyle = require('../map.json'); //tslint:disable-line
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
   monuments: MonumentDict;
 }
+
+interface StateComp {
+  selectedMarker: string;
+  center: [number, number];
+  zoom: number[];
+};
 
 const styles = {
   map: {
@@ -18,15 +26,21 @@ const styles = {
   }
 };
 
-const mapStyle = 'mapbox://styles/mapbox/streets-v8';
-const accessToken = 'pk.eyJ1IjoiZmFicmljOCIsImEiOiJjaWc5aTV1ZzUwMDJwdzJrb2w0dXRmc2d0In0.p6GGlfyV-WksaDV_KdN27A';
+const accessToken = 'pk.eyJ1IjoiYWxleDMxNjUiLCJhIjoiY2l6bjVhNmNzMDAwbjJxbnlsaHk0NDRzciJ9.FFqZuLjBHghDPkyp_1oMpA';
 
+const defaultZoom = [6];
+const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
-class Main extends React.Component<Props, void> {
-  private zoom: number[] = [6];
+class Main extends React.Component<Props, StateComp> {
   private maxBounds: number[] = [];
   private layout = {
     'icon-image': 'marker-15'
+  };
+
+  public state = {
+    selectedMarker: '',
+    zoom: defaultZoom,
+    center: defaultCenter
   };
 
   private mapInit: MapEvent = (map) => {
@@ -76,32 +90,71 @@ class Main extends React.Component<Props, void> {
   };
 
   private onMonumentClick = (k: string) => {
-    console.log(this.props.monuments[k]);
+    const selectedMonument = this.props.monuments[k];
+
+    this.setState({
+      selectedMarker: k,
+      center: selectedMonument.latlng as [number, number],
+      zoom: [11]
+    });
+  };
+
+  private unselectMonument = () => {
+    this.setState({
+      selectedMarker: '',
+      zoom: defaultZoom
+    });
+  }
+
+  private markerHover = (key: string, { map }: any) => {
+      map.getCanvas().style.cursor = 'pointer';
+  };
+
+  private markerEndHover = (key: string, { map }: any) => {
+      map.getCanvas().style.cursor = '';
   };
 
   public render() {
     const { monuments } = this.props;
+    const { selectedMarker, zoom, center } = this.state;
+    const selectedMonument = monuments[selectedMarker];
 
     return (
-      <Map
-        zoom={this.zoom}
-        style={mapStyle}
-        accessToken={accessToken}
-        containerStyle={styles.map}
-        onZoom={this.BoundsChanged}
-        onStyleLoad={this.mapInit}
-        onMove={this.BoundsChanged}>
-          <Layer
-            type="symbol"
-            id="marker"
-            layout={this.layout}>
-            {
-              Object.keys(monuments).map(k => (
-                <Feature onClick={this.onMonumentClick.bind(this, k)} coordinates={monuments[k].latlng} key={k}/>
-              ))
-            }
-          </Layer>
-      </Map>
+      <div>
+        {
+          selectedMonument && (
+            <SidepanMotion
+              onClose={this.unselectMonument}
+              monument={selectedMonument}/>
+          )
+        }
+        <Map
+          zoom={zoom}
+          center={center}
+          style={mapStyle}
+          accessToken={accessToken}
+          containerStyle={styles.map}
+          onZoom={this.BoundsChanged}
+          onStyleLoad={this.mapInit}
+          onMove={this.BoundsChanged}>
+            <Layer
+              type="symbol"
+              id="marker"
+              layout={this.layout}>
+              {
+                Object.keys(monuments).map(k => (
+                  <Feature
+                    onHover={this.markerHover.bind(this, k)}
+                    onEndHover={this.markerEndHover.bind(this, k)}
+                    onClick={this.onMonumentClick.bind(this, k)}
+                    coordinates={monuments[k].latlng}
+                    key={k}
+                  />
+                ))
+              }
+            </Layer>
+        </Map>
+      </div>
     );
   }
 }
