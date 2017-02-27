@@ -1,20 +1,27 @@
 import * as React from 'react';
 import { Layer, Feature, Map } from 'react-mapbox-gl';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
+import { debounce } from 'lodash';
 
 import { connect } from 'react-redux';
-import { getMonuments } from '../actions/monument';
+import { getMonuments, fetchMonument } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
-import SidepanMotion from './sidepanMotion';
+import SidepanContainer from './sidepanContainer';
+import SidepanList from './sidepanList';
+import MapPopup from './mapPopup';
+
 const mapStyle = require('../map.json'); //tslint:disable-line
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
+  fetchMonument: (id: string) => void;
   monuments: MonumentDict;
 }
 
 interface StateComp {
   selectedMarker: string;
+  filteredMonuments: string[];
+  hoveredItem: string;
   center: [number, number];
   zoom: number[];
 };
@@ -39,15 +46,31 @@ class Main extends React.Component<Props, StateComp> {
 
   public state = {
     selectedMarker: '',
+    hoveredItem: '',
     zoom: defaultZoom,
-    center: defaultCenter
+    center: defaultCenter,
+    filteredMonuments: []
   };
 
   private mapInit: MapEvent = (map) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
     this.props.getMonuments(boundsArr);
+    this.setMonuments(boundsArr);
   };
+
+  private setMonuments = debounce((bounds: number[]) => {
+    const { monuments } = this.props;
+
+    this.setState({
+      filteredMonuments: Object.keys(monuments).filter(k => {
+        const lat = monuments[k].latitude;
+        const long = monuments[k].longitude;
+
+        return lat > bounds[0] && long > bounds[1] && lat < bounds[2] && long < bounds[3];
+      })
+    });
+  }, 500);
 
   private setMaxBounds = (bounds: number[]): boolean => {
     let newBounds;
@@ -87,6 +110,8 @@ class Main extends React.Component<Props, StateComp> {
     if (isGreaterThanMaxBounds) {
       this.props.getMonuments(boundsArr);
     }
+
+    this.setMonuments(boundsArr);
   };
 
   private onMonumentClick = (k: string) => {
@@ -97,12 +122,19 @@ class Main extends React.Component<Props, StateComp> {
       center: selectedMonument.latlng as [number, number],
       zoom: [11]
     });
+
+    this.props.fetchMonument(k);
   };
 
-  private unselectMonument = () => {
+  private onHoverItem = (key: string) => {
     this.setState({
-      selectedMarker: '',
-      zoom: defaultZoom
+      hoveredItem: key
+    });
+  }
+
+  private onMouseLeaveItem = () => {
+    this.setState({
+      hoveredItem: ''
     });
   }
 
@@ -116,18 +148,18 @@ class Main extends React.Component<Props, StateComp> {
 
   public render() {
     const { monuments } = this.props;
-    const { selectedMarker, zoom, center } = this.state;
-    const selectedMonument = monuments[selectedMarker];
+    const { zoom, center, hoveredItem, filteredMonuments } = this.state;
 
     return (
       <div>
-        {
-          selectedMonument && (
-            <SidepanMotion
-              onClose={this.unselectMonument}
-              monument={selectedMonument}/>
-          )
-        }
+        <SidepanContainer>
+          <SidepanList
+            filteredMonuments={filteredMonuments}
+            monuments={monuments}
+            onSelectItem={this.onMonumentClick}
+            onMouseEnter={this.onHoverItem}
+            onMouseLeave={this.onMouseLeaveItem}/>
+        </SidepanContainer>
         <Map
           zoom={zoom}
           center={center}
@@ -137,6 +169,11 @@ class Main extends React.Component<Props, StateComp> {
           onZoom={this.BoundsChanged}
           onStyleLoad={this.mapInit}
           onMove={this.BoundsChanged}>
+            {
+              hoveredItem && (
+                <MapPopup monument={monuments[hoveredItem]}/>
+              )
+            }
             <Layer
               type="symbol"
               id="marker"
@@ -162,5 +199,6 @@ class Main extends React.Component<Props, StateComp> {
 export default connect((state: State) => ({
   monuments: state.monuments
 }), dispatch => ({
-  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng))
+  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng)),
+  fetchMonument: (id: string) => { dispatch(fetchMonument(id)) }
 }))(Main);

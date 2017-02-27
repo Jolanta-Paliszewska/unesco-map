@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import * as createLogger from 'redux-logger';
 
-import Main from './containers/main';
+import Main from './components/main';
 
 import rootReducer from './reducers';
 import './common.css';
