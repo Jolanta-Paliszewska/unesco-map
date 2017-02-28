@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Layer, Feature, Map } from 'react-mapbox-gl';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
 import { debounce } from 'lodash';
 
@@ -8,13 +7,13 @@ import { getMonuments, fetchMonument } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
 import SidepanContainer from './sidepanContainer';
 import SidepanList from './sidepanList';
-import MapPopup from './mapPopup';
+import UnescoMap from './map';
+import { css, StyleSheet } from 'aphrodite/no-important';
 
-const mapStyle = require('../map.json'); //tslint:disable-line
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
-  fetchMonument: (id: string) => void;
+  fetchMonument: (id: string) => any;
   monuments: MonumentDict;
 }
 
@@ -26,23 +25,17 @@ interface StateComp {
   zoom: number[];
 };
 
-const styles = {
-  map: {
-    height: '100vh',
-    width: '100vw'
+const styles = StyleSheet.create({
+  container: {
+    display: 'flex'
   }
-};
-
-const accessToken = 'pk.eyJ1IjoiYWxleDMxNjUiLCJhIjoiY2l6bjVhNmNzMDAwbjJxbnlsaHk0NDRzciJ9.FFqZuLjBHghDPkyp_1oMpA';
+});
 
 const defaultZoom = [6];
 const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
 class Main extends React.Component<Props, StateComp> {
   private maxBounds: number[] = [];
-  private layout = {
-    'icon-image': 'marker-15'
-  };
 
   public state = {
     selectedMarker: '',
@@ -138,20 +131,12 @@ class Main extends React.Component<Props, StateComp> {
     });
   }
 
-  private markerHover = (key: string, { map }: any) => {
-      map.getCanvas().style.cursor = 'pointer';
-  };
-
-  private markerEndHover = (key: string, { map }: any) => {
-      map.getCanvas().style.cursor = '';
-  };
-
   public render() {
     const { monuments } = this.props;
     const { zoom, center, hoveredItem, filteredMonuments } = this.state;
 
     return (
-      <div>
+      <div className={css(styles.container)}>
         <SidepanContainer>
           <SidepanList
             filteredMonuments={filteredMonuments}
@@ -160,37 +145,15 @@ class Main extends React.Component<Props, StateComp> {
             onMouseEnter={this.onHoverItem}
             onMouseLeave={this.onMouseLeaveItem}/>
         </SidepanContainer>
-        <Map
+        <UnescoMap
           zoom={zoom}
           center={center}
-          style={mapStyle}
-          accessToken={accessToken}
-          containerStyle={styles.map}
-          onZoom={this.BoundsChanged}
-          onStyleLoad={this.mapInit}
-          onMove={this.BoundsChanged}>
-            {
-              hoveredItem && (
-                <MapPopup monument={monuments[hoveredItem]}/>
-              )
-            }
-            <Layer
-              type="symbol"
-              id="marker"
-              layout={this.layout}>
-              {
-                Object.keys(monuments).map(k => (
-                  <Feature
-                    onHover={this.markerHover.bind(this, k)}
-                    onEndHover={this.markerEndHover.bind(this, k)}
-                    onClick={this.onMonumentClick.bind(this, k)}
-                    coordinates={monuments[k].latlng}
-                    key={k}
-                  />
-                ))
-              }
-            </Layer>
-        </Map>
+          hoveredItem={hoveredItem}
+          monuments={monuments}
+          BoundsChanged={this.BoundsChanged}
+          mapInit={this.mapInit}
+          onMonumentClick={this.onMonumentClick}
+        />
       </div>
     );
   }
@@ -200,5 +163,5 @@ export default connect((state: State) => ({
   monuments: state.monuments
 }), dispatch => ({
   getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng)),
-  fetchMonument: (id: string) => { dispatch(fetchMonument(id)) }
+  fetchMonument: (id: string) => dispatch(fetchMonument(id))
 }))(Main);

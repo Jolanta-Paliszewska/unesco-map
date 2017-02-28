@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { StyleSheet, css } from 'aphrodite/no-important';
 
-const sidepanWidth = 400;
-
 const styles = StyleSheet.create({
   sidepan: {
     zIndex: 10,
-    width: sidepanWidth,
+    width: '30vw',
     height: '100vh',
     overflow: 'auto',
     backgroundColor: 'white',
-    position: 'absolute',
     top: 0,
     borderRight: '1px solid rgb(80%, 80%, 80%)'
   }
