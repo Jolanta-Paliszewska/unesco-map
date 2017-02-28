@@ -3,7 +3,7 @@ import { Monument } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 
 export interface Props {
-  monument?: Monument;
+  monument: Monument;
   fetchMonument: (id: string) => void;
 }
 
@@ -27,10 +27,6 @@ export default class SidepanDetail extends React.Component<Props, void> {
 
   public render() {
     const { monument } = this.props;
-
-    if (!monument) {
-      return null;
-    }
 
     return (
       <div className={css(styles.container)}>

@@ -9,6 +9,7 @@ import SidepanContainer from './sidepanContainer';
 import SidepanList from './sidepanList';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
+import SidepanDetail from './sidepanDetail';
 
 
 interface Props {
@@ -132,18 +133,29 @@ class Main extends React.Component<Props, StateComp> {
   }
 
   public render() {
-    const { monuments } = this.props;
-    const { zoom, center, hoveredItem, filteredMonuments } = this.state;
+    const { monuments, fetchMonument } = this.props;
+    const { zoom, center, hoveredItem, filteredMonuments, selectedMarker } = this.state;
 
     return (
       <div className={css(styles.container)}>
         <SidepanContainer>
-          <SidepanList
-            filteredMonuments={filteredMonuments}
-            monuments={monuments}
-            onSelectItem={this.onMonumentClick}
-            onMouseEnter={this.onHoverItem}
-            onMouseLeave={this.onMouseLeaveItem}/>
+          {
+            selectedMarker ?
+            (
+              <SidepanDetail
+                fetchMonument={fetchMonument}
+                monument={monuments[selectedMarker]}/>
+            ) :
+            (
+              <SidepanList
+                filteredMonuments={filteredMonuments}
+                monuments={monuments}
+                onSelectItem={this.onMonumentClick}
+                onMouseEnter={this.onHoverItem}
+                onMouseLeave={this.onMouseLeaveItem}/>
+            )
+          }
+
         </SidepanContainer>
         <UnescoMap
           zoom={zoom}
