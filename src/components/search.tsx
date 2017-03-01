@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    border: 'none'
+    border: 'none',
+    fontSize: 12
   }
 });
 
