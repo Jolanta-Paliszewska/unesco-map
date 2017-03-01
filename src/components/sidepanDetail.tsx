@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Monument } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
+import * as moment from 'moment';
+import Slider from './slider';
 
 export interface Props {
   monument: Monument;
@@ -30,7 +32,13 @@ export default class SidepanDetail extends React.Component<Props, void> {
 
     return (
       <div className={css(styles.container)}>
+        <div><Slider pictures={monument.pictures}/></div>
+        <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
         <h1>{monument.site}</h1>
+        <div>{ monument.region }</div>
+        <div>
+          { monument.long_description }
+        </div>
       </div>
     );
   }

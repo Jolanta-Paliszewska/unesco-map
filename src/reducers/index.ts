@@ -2,6 +2,17 @@ import { routerReducer as routing, RouterState } from 'react-router-redux';
 import { combineReducers, Action } from 'redux';
 import { SET_MONUMENTS } from '../constants/monument';
 
+export interface Picture {
+  id: string;
+  author: string;
+  created_at: number;
+  flickr_id: string;
+  license_id: string;
+  monument_id: string;
+  updated_at: number;
+  url: string;
+}
+
 export interface Monument {
   id: string;
   id_number: number;
@@ -20,6 +31,7 @@ export interface Monument {
   latitude: number;
   longitude: number;
   latlng: number[];
+  pictures: Picture[];
   location: string;
   states: string;
   long_description: string;
