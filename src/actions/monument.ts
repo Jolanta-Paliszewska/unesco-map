@@ -19,7 +19,8 @@ const selectedFields = [
   'site',
   'image_url',
   'category',
-  'states'
+  'states',
+  'date_inscribed'
 ];
 
 const buildMonumentsUrl = (latlng: number[]) => (

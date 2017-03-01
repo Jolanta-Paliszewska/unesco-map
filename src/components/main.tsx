@@ -10,7 +10,8 @@ import SidepanList from './sidepanList';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import SidepanDetail from './sidepanDetail';
-
+import Timeline from './timeline';
+import Navigation from './navigation';
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
@@ -29,6 +30,15 @@ interface StateComp {
 const styles = StyleSheet.create({
   container: {
     display: 'flex'
+  },
+  sidebar: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  sidebarBody: {
+    flex: 1,
+    display: 'flex',
+    height: '92vh'
   }
 });
 
@@ -135,28 +145,38 @@ class Main extends React.Component<Props, StateComp> {
   public render() {
     const { monuments, fetchMonument } = this.props;
     const { zoom, center, hoveredItem, filteredMonuments, selectedMarker } = this.state;
+    const monumentsFiltered = filteredMonuments
+      .map((k: string) => monuments[k])
+      .sort((a, b) => a.date_inscribed > b.date_inscribed ? -1 : 1);
+
+    const dates = [...new Set(monumentsFiltered.map(monument => monument.date_inscribed))];
 
     return (
       <div className={css(styles.container)}>
-        <SidepanContainer>
-          {
-            selectedMarker ?
-            (
-              <SidepanDetail
-                fetchMonument={fetchMonument}
-                monument={monuments[selectedMarker]}/>
-            ) :
-            (
-              <SidepanList
-                filteredMonuments={filteredMonuments}
-                monuments={monuments}
-                onSelectItem={this.onMonumentClick}
-                onMouseEnter={this.onHoverItem}
-                onMouseLeave={this.onMouseLeaveItem}/>
-            )
-          }
+        <div className={css(styles.sidebar)}>
+          <div className={css(styles.sidebarBody)}>
+            <Timeline collection={dates}/>
+            <SidepanContainer>
+              {
+                selectedMarker ?
+                (
+                  <SidepanDetail
+                    fetchMonument={fetchMonument}
+                    monument={monuments[selectedMarker]}/>
+                ) :
+                (
+                  <SidepanList
+                    filteredMonuments={monumentsFiltered}
+                    onSelectItem={this.onMonumentClick}
+                    onMouseEnter={this.onHoverItem}
+                    onMouseLeave={this.onMouseLeaveItem}/>
+                )
+              }
 
-        </SidepanContainer>
+            </SidepanContainer>
+          </div>
+          <Navigation/>
+        </div>
         <UnescoMap
           zoom={zoom}
           center={center}

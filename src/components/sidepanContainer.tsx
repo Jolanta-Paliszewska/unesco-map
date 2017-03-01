@@ -4,8 +4,6 @@ import { StyleSheet, css } from 'aphrodite/no-important';
 const styles = StyleSheet.create({
   sidepan: {
     zIndex: 10,
-    width: '30vw',
-    height: '100vh',
     overflow: 'auto',
     backgroundColor: 'white',
     top: 0,
