@@ -1,4 +1,4 @@
-import { SET_MONUMENTS } from '../constants/monument';
+import { SET_MONUMENTS, SET_PHOTOS } from '../constants/monument';
 
 const api = (endpoint = 'monuments') => `https://unesco-api.balek.io/api/${endpoint}`;
 
@@ -32,6 +32,12 @@ const setMonuments = (data: any) => ({
   payload: data
 });
 
+const setPhotos = (data: any, id: string) => ({
+  type: SET_PHOTOS,
+  payload: data,
+  id
+});
+
 export const getMonuments = (latlng: number[]) => (dispatch: any) => (
   fetch(req(buildMonumentsUrl(latlng)))
     .then(res => res.json())
@@ -43,7 +49,7 @@ export const fetchMonument = (id: string) => (dispatch: any) => (
     fetch(req(`${api()}?id=eq.${id}`)).then(res => res.json()),
     fetch(req(`${api('pictures')}?monument_id=eq.${id}`)).then(res => res.json())
   ]).then(([ monument, photos ]: any) => {
-    monument.data[0].pictures = photos.data;
     dispatch(setMonuments(monument));
+    dispatch(setPhotos(photos, id));
   })
 );

@@ -155,7 +155,7 @@ class Main extends React.Component<Props, StateComp> {
       <div className={css(styles.container)}>
         <div className={css(styles.sidebar)}>
           <div className={css(styles.sidebarBody)}>
-            <Timeline collection={dates}/>
+            { !selectedMarker && <Timeline collection={dates}/> }
             <SidepanContainer>
               {
                 selectedMarker ?

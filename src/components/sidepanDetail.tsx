@@ -32,7 +32,9 @@ export default class SidepanDetail extends React.Component<Props, void> {
 
     return (
       <div className={css(styles.container)}>
-        <div><Slider pictures={monument.pictures}/></div>
+        <div>
+          { monument.pictures && <Slider pictures={monument.pictures}/> }
+        </div>
         <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
         <h1>{monument.site}</h1>
         <div>{ monument.region }</div>

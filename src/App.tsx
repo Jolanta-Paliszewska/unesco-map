@@ -30,6 +30,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
       <Route path="/" component={Main}/>
+      <Route path="/detail/:id" component={Main}/>
     </Router>
   </Provider>,
   document.getElementById('content')

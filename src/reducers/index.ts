@@ -1,6 +1,6 @@
 import { routerReducer as routing, RouterState } from 'react-router-redux';
 import { combineReducers, Action } from 'redux';
-import { SET_MONUMENTS } from '../constants/monument';
+import { SET_MONUMENTS, SET_PHOTOS } from '../constants/monument';
 
 export interface Picture {
   id: string;
@@ -50,6 +50,7 @@ export interface MonumentDict {
 
 interface RThunkAction extends Action {
   payload: any;
+  id?: string;
 };
 
 export interface State {
@@ -57,7 +58,7 @@ export interface State {
   routing: RouterState;
 }
 
-const monuments = (state: MonumentDict = {}, { type, payload }: RThunkAction) => {
+const monuments = (state: MonumentDict = {}, { type, payload, id }: RThunkAction) => {
   switch (type) {
     case SET_MONUMENTS: return {
       ...state,
@@ -71,6 +72,14 @@ const monuments = (state: MonumentDict = {}, { type, payload }: RThunkAction) =>
           return acc;
         }, {})
     };
+    case SET_PHOTOS: {
+      const monument = { ...state[id!] };
+      monument.pictures = payload.data;
+      return {
+        ...state,
+        [id!]: monument
+      };
+    }
     default: return state;
   }
 };
