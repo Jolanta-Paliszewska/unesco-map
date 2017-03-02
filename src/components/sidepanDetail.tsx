@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { Monument, State } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as moment from 'moment';
@@ -11,6 +12,10 @@ export interface Props {
   fetchMonument: (id: string) => void;
 }
 
+export interface RouteProps {
+  id: string;
+}
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -20,13 +25,11 @@ const styles = StyleSheet.create({
   }
 });
 
-class SidepanDetail extends React.Component<Props, void> {
+class SidepanDetail extends React.Component<Props & RouteComponentProps<RouteProps, void>, void> {
   public componentWillMount() {
-    const { monument } = this.props;
+    const { params } = this.props;
 
-    if (monument) {
-      this.props.fetchMonument(monument.id);
-    }
+    this.props.fetchMonument(params.id);
   }
 
   public render() {
@@ -45,7 +48,7 @@ class SidepanDetail extends React.Component<Props, void> {
         <h1>{monument.site}</h1>
         <div>{ monument.region }</div>
         <div>
-          { monument.long_description }
+          { monument.short_description }
         </div>
       </div>
     );

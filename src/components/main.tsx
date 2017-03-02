@@ -7,7 +7,7 @@ import { MonumentDict, State } from '../reducers/index';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import Navigation from './navigation';
-import { browserHistory } from 'react-router';
+import { browserHistory, RouteComponentProps } from 'react-router';
 import { Props as SidepanListProps } from './sidepanList';
 import SidepanContainer from './sidepanContainer';
 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 const defaultZoom = [6];
 const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
-class Main extends React.Component<Props, StateComp> {
+class Main extends React.Component<Props & RouteComponentProps<void, void>, StateComp> {
   private maxBounds: number[] = [];
 
   public state = {
@@ -51,18 +51,28 @@ class Main extends React.Component<Props, StateComp> {
     filteredMonuments: []
   };
 
-  public componentWillReceiveProps(nextProps: Props) {
-    console.log(nextProps);
+  public componentWillMount() {
+    browserHistory.listen((ev) => {
+      if (!ev.pathname.includes('detail')) {
+        this.setState({
+          zoom: defaultZoom
+        });
+      }
+    });
   }
 
   private mapInit: MapEvent = (map) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
-    this.props.getMonuments(boundsArr);
-    this.setMonuments(boundsArr);
+
+    if (!this.props.location.pathname.includes('detail')) {
+      this.props.getMonuments(boundsArr).then(() => {
+        this.setMonuments(boundsArr);
+      });
+    }
   };
 
-  private setMonuments = debounce((bounds: number[]) => {
+  private setMonuments = (bounds: number[]) => {
     const { monuments } = this.props;
 
     this.setState({
@@ -73,7 +83,7 @@ class Main extends React.Component<Props, StateComp> {
         return lat > bounds[0] && long > bounds[1] && lat < bounds[2] && long < bounds[3];
       })
     });
-  }, 500);
+  };
 
   private setMaxBounds = (bounds: number[]): boolean => {
     let newBounds;
@@ -105,17 +115,17 @@ class Main extends React.Component<Props, StateComp> {
     return isDifferent;
   };
 
-  private BoundsChanged: MapEvent = (map) => {
+  private BoundsChanged: MapEvent = debounce((map: any) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
     const isGreaterThanMaxBounds = this.setMaxBounds(boundsArr);
 
     if (isGreaterThanMaxBounds) {
-      this.props.getMonuments(boundsArr);
+      this.props.getMonuments(boundsArr).then(() => {
+        this.setMonuments(boundsArr);
+      });
     }
-
-    this.setMonuments(boundsArr);
-  };
+  }, 300, { leading: true });
 
   private onMouseEnter = (key: string) => {
     this.setState({

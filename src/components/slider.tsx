@@ -64,7 +64,7 @@ class Slider extends React.Component<Props, State> {
       <div className={css(styles.container)}>
         <div className={css(styles.gallery)} style={{ transform: `translateX(${current * galleryWidth})` }}>
           {
-            pictures.map(picture => <img className={css(styles.image)} src={picture.url}/>)
+            pictures.map((picture, index) => <img className={css(styles.image)} src={picture.url} key={index}/>)
           }
         </div>
         <div className={css(styles.controls)}>
