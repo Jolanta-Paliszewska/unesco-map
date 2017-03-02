@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
 import { debounce } from 'lodash';
-
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
@@ -9,6 +8,8 @@ import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import Navigation from './navigation';
 import { browserHistory } from 'react-router';
+import { Props as SidepanListProps } from './sidepanList';
+import SidepanContainer from './sidepanContainer';
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
@@ -16,7 +17,6 @@ interface Props {
 }
 
 interface StateComp {
-  selectedMarker: string;
   filteredMonuments: string[];
   hoveredItem: string;
   center: [number, number];
@@ -45,12 +45,15 @@ class Main extends React.Component<Props, StateComp> {
   private maxBounds: number[] = [];
 
   public state = {
-    selectedMarker: '',
     hoveredItem: '',
     zoom: defaultZoom,
     center: defaultCenter,
     filteredMonuments: []
   };
+
+  public componentWillReceiveProps(nextProps: Props) {
+    console.log(nextProps);
+  }
 
   private mapInit: MapEvent = (map) => {
     const bounds = map.getBounds();
@@ -114,6 +117,18 @@ class Main extends React.Component<Props, StateComp> {
     this.setMonuments(boundsArr);
   };
 
+  private onMouseEnter = (key: string) => {
+    this.setState({
+      hoveredItem: key
+    });
+  }
+
+  private onMouseLeave = () => {
+    this.setState({
+      hoveredItem: ''
+    });
+  }
+
   private onMonumentClick = (k: string) => {
     const selectedMonument = this.props.monuments[k];
 
@@ -122,7 +137,9 @@ class Main extends React.Component<Props, StateComp> {
       zoom: [11]
     });
 
-    browserHistory.push(`detail/${k}`);
+    setTimeout(() => {
+      browserHistory.push(`detail/${k}`);
+    }, 500);
   };
 
   public render() {
@@ -132,12 +149,18 @@ class Main extends React.Component<Props, StateComp> {
     return (
       <div className={css(styles.container)}>
         <div className={css(styles.sidebar)}>
+          <div className={css(styles.sidebarBody)}>
+            <SidepanContainer>
             {
-              React.cloneElement((children as React.ReactElement<any>), {
-                filteredMonuments,
+              React.cloneElement((children as React.ReactElement<SidepanListProps>), {
+                onMouseEnter: this.onMouseEnter,
+                onMouseLeave: this.onMouseLeave,
+                filteredMonuments: filteredMonuments as string[],
                 onSelectItem: this.onMonumentClick
               })
             }
+            </SidepanContainer>
+          </div>
           <Navigation/>
         </div>
         <UnescoMap

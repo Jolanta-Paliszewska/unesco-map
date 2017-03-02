@@ -4,7 +4,6 @@ import { Monument, State } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as moment from 'moment';
 import Slider from './slider';
-import SidepanContainer from './sidepanContainer';
 import { fetchMonument } from '../actions/monument';
 
 export interface Props {
@@ -18,11 +17,6 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     flexDirection: 'column'
-  },
-  sidebarBody: {
-    flex: 1,
-    display: 'flex',
-    height: '92vh'
   }
 });
 
@@ -38,21 +32,21 @@ class SidepanDetail extends React.Component<Props, void> {
   public render() {
     const { monument } = this.props;
 
+    if (!monument) {
+      return null;
+    }
+
     return (
-      <div className={css(styles.sidebarBody)}>
-        <SidepanContainer>
-          <div className={css(styles.container)}>
-            <div>
-              { monument.pictures && <Slider pictures={monument.pictures}/> }
-            </div>
-            <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
-            <h1>{monument.site}</h1>
-            <div>{ monument.region }</div>
-            <div>
-              { monument.long_description }
-            </div>
-          </div>
-        </SidepanContainer>
+      <div className={css(styles.container)}>
+        <div>
+          { monument.pictures && <Slider pictures={monument.pictures}/> }
+        </div>
+        <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
+        <h1>{monument.site}</h1>
+        <div>{ monument.region }</div>
+        <div>
+          { monument.long_description }
+        </div>
       </div>
     );
   }
