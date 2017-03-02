@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { Router, Route, browserHistory } from 'react-router';
+import { Router, Route, browserHistory, IndexRoute } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
@@ -9,6 +9,8 @@ import thunk from 'redux-thunk';
 import * as createLogger from 'redux-logger';
 
 import Main from './components/main';
+import SidepanList from './components/sidepanList';
+import SidepanDetail from './components/sidepanDetail';
 
 import rootReducer from './reducers';
 import './common.css';
@@ -29,8 +31,10 @@ const history = syncHistoryWithStore(browserHistory, store, {
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>
-      <Route path="/" component={Main}/>
-      <Route path="/detail/:id" component={Main}/>
+      <Route path="/" component={Main}>
+        <IndexRoute component={SidepanList}/>
+        <Route path="detail/:id" component={SidepanDetail}/>
+      </Route>
     </Router>
   </Provider>,
   document.getElementById('content')

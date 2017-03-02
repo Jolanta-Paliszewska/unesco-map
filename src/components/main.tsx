@@ -3,19 +3,15 @@ import { MapEvent } from 'react-mapbox-gl/lib/map';
 import { debounce } from 'lodash';
 
 import { connect } from 'react-redux';
-import { getMonuments, fetchMonument } from '../actions/monument';
+import { getMonuments } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
-import SidepanContainer from './sidepanContainer';
-import SidepanList from './sidepanList';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
-import SidepanDetail from './sidepanDetail';
-import Timeline from './timeline';
 import Navigation from './navigation';
+import { browserHistory } from 'react-router';
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
-  fetchMonument: (id: string) => any;
   monuments: MonumentDict;
 }
 
@@ -122,59 +118,26 @@ class Main extends React.Component<Props, StateComp> {
     const selectedMonument = this.props.monuments[k];
 
     this.setState({
-      selectedMarker: k,
       center: selectedMonument.latlng as [number, number],
       zoom: [11]
     });
 
-    this.props.fetchMonument(k);
+    browserHistory.push(`detail/${k}`);
   };
 
-  private onHoverItem = (key: string) => {
-    this.setState({
-      hoveredItem: key
-    });
-  }
-
-  private onMouseLeaveItem = () => {
-    this.setState({
-      hoveredItem: ''
-    });
-  }
-
   public render() {
-    const { monuments, fetchMonument } = this.props;
-    const { zoom, center, hoveredItem, filteredMonuments, selectedMarker } = this.state;
-    const monumentsFiltered = filteredMonuments
-      .map((k: string) => monuments[k])
-      .sort((a, b) => a.date_inscribed > b.date_inscribed ? -1 : 1);
-
-    const dates = [...new Set(monumentsFiltered.map(monument => monument.date_inscribed))];
+    const { monuments, children } = this.props;
+    const { zoom, center, hoveredItem, filteredMonuments } = this.state;
 
     return (
       <div className={css(styles.container)}>
         <div className={css(styles.sidebar)}>
-          <div className={css(styles.sidebarBody)}>
-            { !selectedMarker && <Timeline collection={dates}/> }
-            <SidepanContainer>
-              {
-                selectedMarker ?
-                (
-                  <SidepanDetail
-                    fetchMonument={fetchMonument}
-                    monument={monuments[selectedMarker]}/>
-                ) :
-                (
-                  <SidepanList
-                    filteredMonuments={monumentsFiltered}
-                    onSelectItem={this.onMonumentClick}
-                    onMouseEnter={this.onHoverItem}
-                    onMouseLeave={this.onMouseLeaveItem}/>
-                )
-              }
-
-            </SidepanContainer>
-          </div>
+            {
+              React.cloneElement((children as React.ReactElement<any>), {
+                filteredMonuments,
+                onSelectItem: this.onMonumentClick
+              })
+            }
           <Navigation/>
         </div>
         <UnescoMap
@@ -194,6 +157,5 @@ class Main extends React.Component<Props, StateComp> {
 export default connect((state: State) => ({
   monuments: state.monuments
 }), dispatch => ({
-  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng)),
-  fetchMonument: (id: string) => dispatch(fetchMonument(id))
+  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng))
 }))(Main);

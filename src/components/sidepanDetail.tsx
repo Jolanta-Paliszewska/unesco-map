@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { Monument } from '../reducers/index';
+import { connect } from 'react-redux';
+import { Monument, State } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as moment from 'moment';
 import Slider from './slider';
+import SidepanContainer from './sidepanContainer';
+import { fetchMonument } from '../actions/monument';
 
 export interface Props {
   monument: Monument;
@@ -15,13 +18,18 @@ const styles = StyleSheet.create({
     height: '100%',
     display: 'flex',
     flexDirection: 'column'
+  },
+  sidebarBody: {
+    flex: 1,
+    display: 'flex',
+    height: '92vh'
   }
 });
 
-export default class SidepanDetail extends React.Component<Props, void> {
-
+class SidepanDetail extends React.Component<Props, void> {
   public componentWillMount() {
     const { monument } = this.props;
+
     if (monument) {
       this.props.fetchMonument(monument.id);
     }
@@ -31,17 +39,27 @@ export default class SidepanDetail extends React.Component<Props, void> {
     const { monument } = this.props;
 
     return (
-      <div className={css(styles.container)}>
-        <div>
-          { monument.pictures && <Slider pictures={monument.pictures}/> }
-        </div>
-        <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
-        <h1>{monument.site}</h1>
-        <div>{ monument.region }</div>
-        <div>
-          { monument.long_description }
-        </div>
+      <div className={css(styles.sidebarBody)}>
+        <SidepanContainer>
+          <div className={css(styles.container)}>
+            <div>
+              { monument.pictures && <Slider pictures={monument.pictures}/> }
+            </div>
+            <div>{ monument.states }, { moment(monument.date_inscribed).format('YYYY') }</div>
+            <h1>{monument.site}</h1>
+            <div>{ monument.region }</div>
+            <div>
+              { monument.long_description }
+            </div>
+          </div>
+        </SidepanContainer>
       </div>
     );
   }
 }
+
+export default connect<any, any, any>((state: State, props: any) => ({
+  monument: state.monuments[props.params.id]
+}), dispatch => ({
+  fetchMonument: (id: string) => dispatch(fetchMonument(id))
+}))(SidepanDetail);
