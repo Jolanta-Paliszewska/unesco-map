@@ -122,12 +122,12 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
     const isGreaterThanMaxBounds = this.setMaxBounds(boundsArr);
 
+    this.setMonuments(boundsArr);
+
     if (isGreaterThanMaxBounds) {
-      this.props.getMonuments(boundsArr).then(() => {
-        this.setMonuments(boundsArr);
-      });
+      this.props.getMonuments(boundsArr);
     }
-  }, 300, { leading: true });
+  }, 300);
 
   private onMouseEnter = (key: string) => {
     this.setState({

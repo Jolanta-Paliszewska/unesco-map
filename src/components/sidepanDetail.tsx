@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
   title: {
     color: colors.darkBlue,
     fontSize: 24,
-    lineHeight: '40px'
+    lineHeight: '32px',
+    padding: '4px 0px'
   },
   region: {
     color: colors.grey,
@@ -46,6 +47,10 @@ const styles = StyleSheet.create({
     color: colors.darkBlue,
     marginTop: 12,
     lineHeight: '22px'
+  },
+  maxDescription: {
+    maxHeight: 230,
+    overflow: 'auto'
   },
   footer: {
     backgroundColor: colors.brokenWhite,
@@ -77,10 +82,12 @@ class SidepanDetail extends React.Component<Props, void> {
       return null;
     }
 
+    const hasPictures = monument.pictures && monument.pictures.length > 0;
+
     return (
       <div className={css(styles.container)}>
         <div>
-          { monument.pictures && <Slider pictures={monument.pictures}/> }
+          { hasPictures && <Slider pictures={monument.pictures}/> }
         </div>
         <div className={css(styles.monumentDetails)}>
           <div className={css(styles.leading)}>
@@ -88,7 +95,7 @@ class SidepanDetail extends React.Component<Props, void> {
           </div>
           <h1 className={css(styles.title)}>{monument.site}</h1>
           <div className={css(styles.region)}>{ monument.region }</div>
-          <div className={css(styles.description)}>
+          <div className={css(styles.description, hasPictures && styles.maxDescription)}>
             { monument.short_description }
           </div>
         </div>
