@@ -10,20 +10,22 @@ export interface State {
   current: number;
 }
 
-const galleryWidth = 420;
+const galleryWidth = 500;
 
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
     width: galleryWidth,
     height: 300,
-    overflow: 'hidden'
+    overflowY: 'hidden',
+    overflowX: 'auto'
   },
   gallery: {
-    display: 'flex'
+    display: 'flex',
+    maxHeight: '100%'
   },
   image: {
-    maxWidth: '100%',
+    maxWidth: galleryWidth,
     maxHeight: '100%'
   },
   controls: {
@@ -62,7 +64,10 @@ class Slider extends React.Component<Props, State> {
 
     return (
       <div className={css(styles.container)}>
-        <div className={css(styles.gallery)} style={{ transform: `translateX(${current * galleryWidth})` }}>
+        <div className={css(styles.gallery)} style={{
+          transform: `translateX(${current * galleryWidth})`,
+          width: `${pictures.length * 100}%`
+        }}>
           {
             pictures.map((picture, index) => <img className={css(styles.image)} src={picture.url} key={index}/>)
           }

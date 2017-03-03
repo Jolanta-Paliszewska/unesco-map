@@ -5,11 +5,16 @@ import { MonumentDict, State } from '../reducers/index';
 import MonumentItem from './monumentItem';
 import Search from './search';
 import Timeline from './timeline';
+import Navigation from './navigation';
 
 const styles = StyleSheet.create({
   container: {
     display: 'flex'
   },
+  list: {
+    maxHeight: '100vh',
+    overflow: 'auto'
+  }
 });
 
 export interface Props {
@@ -33,7 +38,7 @@ class SidepanList extends React.Component<Props, void> {
     return (
       <div className={css(styles.container)}>
         <Timeline collection={dates}/>
-        <div>
+        <div className={css(styles.list)}>
           <Search onChange={() => null}/>
           {
             monumentsFiltered.map((monument, index) => (
@@ -45,6 +50,7 @@ class SidepanList extends React.Component<Props, void> {
                 onMouseLeave={() => onMouseLeave()}/>
             ))
           }
+          <Navigation/>
         </div>
       </div>
     );

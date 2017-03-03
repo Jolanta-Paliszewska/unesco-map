@@ -61,16 +61,20 @@ export interface State {
 const monuments = (state: MonumentDict = {}, { type, payload, id }: RThunkAction) => {
   switch (type) {
     case SET_MONUMENTS: return {
-      ...state,
       ...payload.data
         .map((monument: Monument) => ({
           ...monument,
           latlng: [monument.longitude, monument.latitude]
         }))
         .reduce((acc: MonumentDict, next: Monument) => {
-          acc[next.id] = next;
+          if (acc[next.id]) {
+            acc[next.id] = { ...acc[next.id], ...next };
+          } else {
+            acc[next.id] = next;
+          }
+
           return acc;
-        }, {})
+        }, { ...state })
     };
     case SET_PHOTOS: {
       const monument = { ...state[id!] };

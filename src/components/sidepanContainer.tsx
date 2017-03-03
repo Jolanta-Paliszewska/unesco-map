@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
   sidepan: {
     zIndex: 10,
     width: 500,
-    overflow: 'auto',
     backgroundColor: 'white',
     top: 0,
     borderRight: '1px solid rgb(80%, 80%, 80%)'

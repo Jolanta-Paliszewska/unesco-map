@@ -6,7 +6,6 @@ import { getMonuments } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
-import Navigation from './navigation';
 import { browserHistory, RouteComponentProps } from 'react-router';
 import { Props as SidepanListProps } from './sidepanList';
 import SidepanContainer from './sidepanContainer';
@@ -26,15 +25,6 @@ interface StateComp {
 const styles = StyleSheet.create({
   container: {
     display: 'flex'
-  },
-  sidebar: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  sidebarBody: {
-    flex: 1,
-    display: 'flex',
-    height: '92vh'
   }
 });
 
@@ -158,21 +148,16 @@ class Main extends React.Component<Props & RouteComponentProps<void, void>, Stat
 
     return (
       <div className={css(styles.container)}>
-        <div className={css(styles.sidebar)}>
-          <div className={css(styles.sidebarBody)}>
-            <SidepanContainer>
-            {
-              React.cloneElement((children as React.ReactElement<SidepanListProps>), {
-                onMouseEnter: this.onMouseEnter,
-                onMouseLeave: this.onMouseLeave,
-                filteredMonuments: filteredMonuments as string[],
-                onSelectItem: this.onMonumentClick
-              })
-            }
-            </SidepanContainer>
-          </div>
-          <Navigation/>
-        </div>
+        <SidepanContainer>
+        {
+          React.cloneElement((children as React.ReactElement<SidepanListProps>), {
+            onMouseEnter: this.onMouseEnter,
+            onMouseLeave: this.onMouseLeave,
+            filteredMonuments: filteredMonuments as string[],
+            onSelectItem: this.onMonumentClick
+          })
+        }
+        </SidepanContainer>
         <UnescoMap
           zoom={zoom}
           center={center}
