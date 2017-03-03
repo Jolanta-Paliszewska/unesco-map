@@ -4,8 +4,6 @@ import { Layer, Feature, Map } from 'react-mapbox-gl';
 import { MonumentDict } from '../reducers/index';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
 
-const mapStyle = require('../map.json'); //tslint:disable-line
-
 const accessToken = 'pk.eyJ1IjoiYWxleDMxNjUiLCJhIjoiY2l6bjVhNmNzMDAwbjJxbnlsaHk0NDRzciJ9.FFqZuLjBHghDPkyp_1oMpA';
 const styles = {
   map: {
@@ -26,7 +24,7 @@ export interface Props {
 
 class UnescoMap extends React.Component<Props, void> {
   private layout = {
-    'icon-image': 'marker-15'
+    'icon-image': 'monument'
   };
 
   private markerHover = (key: string, { map }: any) => {
@@ -44,7 +42,7 @@ class UnescoMap extends React.Component<Props, void> {
       <Map
         zoom={zoom}
         center={center}
-        style={mapStyle}
+        style="mapbox://styles/alex3165/cizu1cw8j00fl2st69h0lbmj6"
         accessToken={accessToken}
         containerStyle={styles.map}
         onZoom={BoundsChanged}
