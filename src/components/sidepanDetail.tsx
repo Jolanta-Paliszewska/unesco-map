@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Navigation from './navigation';
-import { RouteComponentProps } from 'react-router';
+import { browserHistory } from 'react-router';
 import { Monument, State } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as moment from 'moment';
 import Slider from './slider';
-import { fetchMonument } from '../actions/monument';
 import { colors } from '../style';
+import Back from '../icons/back';
 
 export interface Props {
   monument: Monument;
-  fetchMonument: (id: string) => void;
 }
 
 export interface RouteProps {
@@ -48,14 +46,28 @@ const styles = StyleSheet.create({
     color: colors.darkBlue,
     marginTop: 12,
     lineHeight: '22px'
+  },
+  footer: {
+    backgroundColor: colors.brokenWhite,
+    height: 56,
+    display: 'flex',
+    alignItems: 'center'
+  },
+  allSites: {
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 32,
+    fontWeight: 400,
+    cursor: 'pointer'
+  },
+  back: {
+    marginRight: 4
   }
 });
 
-class SidepanDetail extends React.Component<Props & RouteComponentProps<RouteProps, void>, void> {
-  public componentWillMount() {
-    const { params } = this.props;
-
-    this.props.fetchMonument(params.id);
+class SidepanDetail extends React.Component<Props, void> {
+  private onGoBack = () => {
+    browserHistory.push('/');
   }
 
   public render() {
@@ -80,14 +92,17 @@ class SidepanDetail extends React.Component<Props & RouteComponentProps<RoutePro
             { monument.short_description }
           </div>
         </div>
-        <Navigation/>
+        <div className={css(styles.footer)}>
+          <div className={css(styles.allSites)} onClick={this.onGoBack}>
+            <Back className={css(styles.back)}/>
+            All sites
+          </div>
+        </div>
       </div>
     );
   }
 }
 
-export default connect<any, any, any>((state: State, props: any) => ({
+export default connect((state: State, props: any) => ({
   monument: state.monuments[props.params.id]
-}), dispatch => ({
-  fetchMonument: (id: string) => dispatch(fetchMonument(id))
 }))(SidepanDetail);

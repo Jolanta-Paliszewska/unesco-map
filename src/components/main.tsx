@@ -8,11 +8,14 @@ import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import { browserHistory, RouteComponentProps } from 'react-router';
 import { Props as SidepanListProps } from './sidepanList';
+import { RouteProps } from './sidepanDetail';
 import SidepanContainer from './sidepanContainer';
+import { fetchMonument } from '../actions/monument';
 
 interface Props {
   getMonuments: (latlng: number[]) => any;
   monuments: MonumentDict;
+  fetchMonument: (id: string) => any;
 }
 
 interface StateComp {
@@ -31,7 +34,7 @@ const styles = StyleSheet.create({
 const defaultZoom = [6];
 const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
-class Main extends React.Component<Props & RouteComponentProps<void, void>, StateComp> {
+class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>, StateComp> {
   private maxBounds: number[] = [];
 
   public state = {
@@ -42,6 +45,17 @@ class Main extends React.Component<Props & RouteComponentProps<void, void>, Stat
   };
 
   public componentWillMount() {
+    const { location, fetchMonument, params } = this.props;
+
+    if (location.pathname.includes('detail')) {
+      fetchMonument(params.id).then(() => {
+        this.setState({
+          center: this.props.monuments[params.id].latlng as [number, number],
+          zoom: [11]
+        });
+      });
+    }
+
     browserHistory.listen((ev) => {
       if (!ev.pathname.includes('detail')) {
         this.setState({
@@ -55,11 +69,9 @@ class Main extends React.Component<Props & RouteComponentProps<void, void>, Stat
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
-    if (!this.props.location.pathname.includes('detail')) {
-      this.props.getMonuments(boundsArr).then(() => {
-        this.setMonuments(boundsArr);
-      });
-    }
+    this.props.getMonuments(boundsArr).then(() => {
+      this.setMonuments(boundsArr);
+    });
   };
 
   private setMonuments = (bounds: number[]) => {
@@ -137,8 +149,10 @@ class Main extends React.Component<Props & RouteComponentProps<void, void>, Stat
       zoom: [11]
     });
 
+    this.props.fetchMonument(k);
+
     setTimeout(() => {
-      browserHistory.push(`detail/${k}`);
+      browserHistory.replace(`/detail/${k}`);
     }, 500);
   };
 
@@ -175,5 +189,6 @@ class Main extends React.Component<Props & RouteComponentProps<void, void>, Stat
 export default connect((state: State) => ({
   monuments: state.monuments
 }), dispatch => ({
-  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng))
+  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng)),
+  fetchMonument: (id: string) => dispatch(fetchMonument(id))
 }))(Main);
