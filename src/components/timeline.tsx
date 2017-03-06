@@ -9,6 +9,7 @@ export interface Props {
 const styles = StyleSheet.create({
   container: {
     maxHeight: '100vh',
+    minWidth: 74,
     backgroundColor: '#f8f7f0',
     display: 'flex',
     flexDirection: 'column'

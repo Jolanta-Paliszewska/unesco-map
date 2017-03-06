@@ -46,7 +46,11 @@ const MonumentItem: React.StatelessComponent<Props> = ({ monument, onMouseEnter,
     onClick={onClick}
     onMouseEnter={onMouseEnter}
     onMouseLeave={onMouseLeave}>
-    <div className={css(styles.flag)}/>
+    {
+      (monument as any).countryIso && (
+        <div className={css(styles.flag)}/>
+      )
+    }
     <div className={css(styles.description)}>
       <h1>{ monument.site }</h1>
       <div className={css(styles.second)}>{ monument.states } | { moment(monument.date_inscribed).format('YYYY') }</div>

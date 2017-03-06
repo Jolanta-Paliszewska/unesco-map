@@ -51,7 +51,8 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
       fetchMonument(params.id).then(() => {
         this.setState({
           center: this.props.monuments[params.id].latlng as [number, number],
-          zoom: [11]
+          zoom: [11],
+          hoveredItem: params.id
         });
       });
     }

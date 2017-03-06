@@ -98,3 +98,8 @@ footer {
   right: 0;
   background-color: #fafafc;
 }
+
+.mapboxgl-popup-content {
+  padding: 0 !important;
+  border-radius: 5px;
+}

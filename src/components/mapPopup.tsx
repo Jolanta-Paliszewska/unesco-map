@@ -2,14 +2,24 @@ import * as React from 'react';
 import { Popup } from 'react-mapbox-gl';
 import { Monument } from '../reducers/index';
 import { css, StyleSheet } from 'aphrodite/no-important';
+import { colors } from '../style';
 
 export interface Props {
   monument: Monument;
 }
 
 const styles = StyleSheet.create({
-  popup: {
-    width: 200
+  container: {
+    maxWidth: 200,
+    backgroundColor: colors.darkBlue,
+    borderRadius: 5
+  },
+  image: {
+    margin: 'auto'
+  },
+  footer: {
+    backgroundColor: 'white',
+    padding: '8px 12px'
   }
 });
 
@@ -22,12 +32,13 @@ const MapPopup: React.StatelessComponent<Props> = ({ monument }) => (
   <Popup
     coordinates={monument.latlng}
     anchor="bottom"
-    offset={offset}
-    className={css(styles.popup)}>
-    <div>
-      <img src={monument.image_url}/>
+    offset={offset}>
+    <div className={css(styles.container)}>
+      <img className={css(styles.image)} src={monument.image_url}/>
+      <div className={css(styles.footer)}>
+        <h1 style={{ fontSize: 15 }}>{ monument.site }</h1>
+      </div>
     </div>
-    <h1>{ monument.site }</h1>
   </Popup>
 );
 
