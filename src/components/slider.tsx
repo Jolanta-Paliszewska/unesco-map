@@ -1,81 +1,62 @@
 import * as React from 'react';
+import * as SlickSlider from 'react-slick';
+import { StyleSheet, css } from 'aphrodite/no-important';
 import { Picture } from '../reducers/index';
-import { css, StyleSheet } from 'aphrodite/no-important';
+import Fullscreen from '../icons/fullscreen';
 
 export interface Props {
   pictures: Picture[];
 }
 
-export interface State {
-  current: number;
-}
-
-const galleryWidth = 500;
+export interface State {}
 
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: galleryWidth,
+    width: '100%',
     height: 300,
     overflowY: 'hidden',
     overflowX: 'auto'
   },
-  gallery: {
-    display: 'flex',
-    maxHeight: '100%'
-  },
-  image: {
-    maxWidth: galleryWidth,
-    maxHeight: '100%'
+  slider: {
+    width: '100%',
+    height: '100%'
   },
   controls: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
-    display: 'flex'
+    right: 20,
+    bottom: 20
   }
 });
 
+const settings = {
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1
+};
+
+const controls = [Fullscreen];
+
 class Slider extends React.Component<Props, State> {
-
-  public state = {
-    current: 0
-  };
-
-  private prev = () => {
-    this.setState({
-      current: this.state.current - 1
-    });
-  };
-
-  private next = () => {
-    this.setState({
-      current: this.state.current + 1
-    });
-  };
-
-  private full = () => {
-    console.log(this.state.current);
-  };
-
   public render() {
     const { pictures } = this.props;
-    const { current } = this.state;
 
     return (
       <div className={css(styles.container)}>
-        <div className={css(styles.gallery)} style={{
-          transform: `translateX(${current * galleryWidth})`,
-          width: `${pictures.length * 100}%`
-        }}>
+        <SlickSlider {...settings} className={css(styles.slider)}>
           {
-            pictures.map((picture, index) => <img className={css(styles.image)} src={picture.url} key={index}/>)
+            pictures.map((picture, index) => (
+              <img src={picture.url} key={index}/>
+            ))
           }
-        </div>
+        </SlickSlider>
         <div className={css(styles.controls)}>
-          <div onClick={this.prev}>prev</div>
-          <div onClick={this.next}>next</div>
-          <div onClick={this.full}>full</div>
+          {
+            controls.map(Icon =>
+              <Icon/>
+            )
+          }
         </div>
       </div>
     );

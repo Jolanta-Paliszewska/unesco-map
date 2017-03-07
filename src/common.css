@@ -103,3 +103,19 @@ footer {
   padding: 0 !important;
   border-radius: 5px;
 }
+
+/* Slick overload */
+
+/*.slick-dots {
+  bottom: 0px;
+}
+
+.slick-next {
+  right: 5px;
+  z-index: 10;
+}
+
+.slick-prev {
+  left: 5px;
+  z-index: 10;
+}*/
