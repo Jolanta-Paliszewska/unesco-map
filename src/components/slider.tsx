@@ -3,6 +3,8 @@ import * as SlickSlider from 'react-slick';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { Picture } from '../reducers/index';
 import Fullscreen from '../icons/fullscreen';
+import Right from '../icons/right';
+import Left from '../icons/left';
 
 export interface Props {
   pictures: Picture[];
@@ -24,8 +26,20 @@ const styles = StyleSheet.create({
   },
   controls: {
     position: 'absolute',
-    right: 20,
-    bottom: 20
+    display: 'flex',
+    right: 0,
+    bottom: 0
+  },
+  icon: {
+    width: 40,
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    borderRadius: 5,
+    cursor: 'pointer',
+    margin: 5
   }
 });
 
@@ -36,15 +50,23 @@ const settings = {
   slidesToScroll: 1
 };
 
-const controls = [Fullscreen];
-
 class Slider extends React.Component<Props, State> {
+  private slider: any;
+
+  private onPrev = () => {
+    this.slider.slickPrev();
+  }
+
+  private onNext = () => {
+    this.slider.slickNext();
+  }
+
   public render() {
     const { pictures } = this.props;
 
     return (
       <div className={css(styles.container)}>
-        <SlickSlider {...settings} className={css(styles.slider)}>
+        <SlickSlider {...settings} className={css(styles.slider)} ref={c => this.slider = c }>
           {
             pictures.map((picture, index) => (
               <img src={picture.url} key={index}/>
@@ -52,11 +74,15 @@ class Slider extends React.Component<Props, State> {
           }
         </SlickSlider>
         <div className={css(styles.controls)}>
-          {
-            controls.map(Icon =>
-              <Icon/>
-            )
-          }
+          <div className={css(styles.icon)} onClick={this.onPrev}>
+            <Left/>
+          </div>
+          <div className={css(styles.icon)} onClick={this.onNext}>
+            <Right/>
+          </div>
+          <div className={css(styles.icon)}>
+            <Fullscreen/>
+          </div>
         </div>
       </div>
     );
