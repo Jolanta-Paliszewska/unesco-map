@@ -23,10 +23,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const offset = {
-  x: 0,
-  y: -100
-};
+const offset = [0, -15];
 
 const MapPopup: React.StatelessComponent<Props> = ({ monument }) => (
   <Popup

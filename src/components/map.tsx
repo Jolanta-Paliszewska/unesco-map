@@ -18,7 +18,7 @@ export interface Props {
   monuments: MonumentDict;
   BoundsChanged: MapEvent;
   mapInit: MapEvent;
-  center: [number, number];
+  center: number[];
   zoom: number[];
   hoveredItem: string;
   onMonumentClick: (k: string) => void;
