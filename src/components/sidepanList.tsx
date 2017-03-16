@@ -3,24 +3,16 @@ import { connect } from 'react-redux';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { MonumentDict, State as RootState} from '../reducers/index';
 import MonumentItem from './monumentItem';
-import Search from './search';
-import Timeline from './timeline';
 import Navigation from './navigation';
 
 const styles = StyleSheet.create({
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    maxHeight: '100vh',
-    minHeight: '100%'
-  },
-  container: {
-    display: 'flex',
-    flex: 1
+    maxHeight: '100vh'
   },
   list: {
-    maxHeight: '100vh',
+    flex: 9,
     overflow: 'auto'
   }
 });
@@ -58,28 +50,21 @@ class SidepanList extends React.Component<Props, State> {
       .filter(monument => monument.site.toLowerCase().includes(query))
       .sort((a, b) => a.date_inscribed > b.date_inscribed ? -1 : 1);
 
-    const dates = [...new Set(monumentsFiltered.map(monument => monument.date_inscribed))];
-
     return (
       <div className={css(styles.wrapper)}>
-        <div className={css(styles.container)}>
-          <Timeline collection={dates}/>
-          <div className={css(styles.list)}>
-            <Search onChange={this.onSearch}/>
-            {
-              monumentsFiltered.map((monument, index) => (
-                <MonumentItem
-                  monument={monument}
-                  key={index}
-                  onClick={() => onSelectItem(monument.id)}
-                  onMouseEnter={() => onMouseEnter(monument.id)}
-                  onMouseLeave={() => onMouseLeave()}/>
-              ))
-            }
-
-          </div>
+        <Navigation onSearch={this.onSearch}/>
+        <div className={css(styles.list)}>
+          {
+            monumentsFiltered.map((monument, index) => (
+              <MonumentItem
+                monument={monument}
+                key={index}
+                onClick={() => onSelectItem(monument.id)}
+                onMouseEnter={() => onMouseEnter(monument.id)}
+                onMouseLeave={() => onMouseLeave()}/>
+            ))
+          }
         </div>
-        <Navigation/>
       </div>
     );
   }

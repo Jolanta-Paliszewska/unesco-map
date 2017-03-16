@@ -16,7 +16,8 @@ const styles = StyleSheet.create({
     boxSizing: 'border-box'
   },
   wrapper: {
-    position: 'relative'
+    position: 'relative',
+    flex: 1
   },
   icon: {
     position: 'absolute',

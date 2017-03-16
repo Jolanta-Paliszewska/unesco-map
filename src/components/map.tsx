@@ -10,7 +10,7 @@ const accessToken = 'pk.eyJ1IjoiYWxleDMxNjUiLCJhIjoiY2l6bjVhNmNzMDAwbjJxbnlsaHk0
 const styles = {
   map: {
     height: '100vh',
-    width: '70vw'
+    width: '100%'
   }
 };
 

@@ -1,20 +1,14 @@
 import * as React from 'react';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import UnescoIcon from '../icons/unesco';
-import { colors } from '../style';
+import Search from './search';
 
 const styles = StyleSheet.create({
   container: {
-    height: 56,
+    flex: 3,
     backgroundColor: 'white',
     display: 'flex',
     boxShadow: 'inset 0 1px 0 0 #edeaea'
-  },
-  menu: {
-    flex: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   icon: {
     minWidth: 74,
@@ -22,52 +16,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  item: {
-    padding: '0px 16px',
-    color: colors.grey,
-    minWidth: 16,
-    height: '100%',
+  selectContainer: {
+    width: 112,
     display: 'flex',
+    justifyContent: 'space-around',
     alignItems: 'center'
   },
-  selected: {
-    color: colors.darkBlue,
-    borderBottom: `2px solid ${colors.darkBlue}`
+  select: {
+    flex: 1,
+    border: 'none',
+    maxWidth: 47,
+    background: 'none'
   }
 });
 
-const menu = [
-  'Year',
-  'Country',
-  'Name'
-];
-
-export interface Props {}
-export interface State {
-  selected: number;
+export interface Props {
+  onSearch: React.ReactEventHandler<HTMLElement>;
 }
+export interface State {}
 
 class Navigation extends React.Component<Props, State> {
 
-  public state = {
-    selected: 0
-  };
-
   public render() {
-    const { selected } = this.state;
+    const { onSearch } = this.props;
+
     return (
       <div className={css(styles.container)}>
         <div className={css(styles.icon)}>
           <UnescoIcon/>
         </div>
-        <div className={css(styles.menu)}>
-          {
-            menu.map((item, index) => (
-              <div key={item} className={css(styles.item, index === selected && styles.selected)}>
-                { item }
-              </div>
-            ))
-          }
+        <Search onChange={onSearch}/>
+        <div className={css(styles.selectContainer)}>
+          <div>
+            Sort:
+          </div>
+          <select className={css(styles.select)}>
+            <option>Year</option>
+            <option>Countries</option>
+            <option>Name</option>
+          </select>
         </div>
       </div>
     );

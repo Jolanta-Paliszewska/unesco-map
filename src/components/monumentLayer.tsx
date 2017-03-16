@@ -30,8 +30,8 @@ const monumentLayer: React.StatelessComponent<Props> = ({
     {
       monumentIds.map(k => (
         <Feature
-          onHover={markerHover.bind(null, k)}
-          onEndHover={markerEndHover.bind(null, k)}
+          onMouseEnter={markerHover.bind(null, k)}
+          onMouseLeave={markerEndHover.bind(null, k)}
           onClick={onMonumentClick.bind(null, k)}
           coordinates={monuments[k].latlng}
           key={k}
