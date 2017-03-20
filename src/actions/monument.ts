@@ -23,8 +23,8 @@ const selectedFields = [
   'date_inscribed'
 ];
 
-const buildMonumentsUrl = (latlng: number[]) => (
-  `${api()}?select=${selectedFields.join(',')}&latitude=gte.${latlng[0]}&longitude=gte.${latlng[1]}&latitude=lte.${latlng[2]}&longitude=lte.${latlng[3]}` //tslint:disable-line
+const buildMonumentsUrl = () => (
+  `${api()}?select=${selectedFields.join(',')}` //tslint:disable-line
 );
 
 const setMonuments = (data: any) => ({
@@ -38,8 +38,8 @@ const setPhotos = (data: any, id: string) => ({
   id
 });
 
-export const getMonuments = (latlng: number[]) => (dispatch: any) => (
-  fetch(req(buildMonumentsUrl(latlng)))
+export const getMonuments = () => (dispatch: any) => (
+  fetch(req(buildMonumentsUrl()))
     .then(res => res.json())
     .then((data) => dispatch(setMonuments(data)))
 );

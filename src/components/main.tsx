@@ -13,7 +13,7 @@ import SidepanContainer from './sidepanContainer';
 import { fetchMonument } from '../actions/monument';
 
 interface Props {
-  getMonuments: (latlng: number[]) => any;
+  getMonuments: () => any;
   monuments: MonumentDict;
   fetchMonument: (id: string) => any;
 }
@@ -35,7 +35,6 @@ const defaultZoom = [6];
 const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
 class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>, StateComp> {
-  private maxBounds: number[] = [];
 
   public state = {
     hoveredItem: '',
@@ -70,7 +69,7 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
-    this.props.getMonuments(boundsArr).then(() => {
+    this.props.getMonuments().then(() => {
       this.setMonuments(boundsArr);
     });
   };
@@ -88,46 +87,11 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     });
   };
 
-  private setMaxBounds = (bounds: number[]): boolean => {
-    let newBounds;
-    let isDifferent = false;
-
-    if (this.maxBounds.length > 0) {
-      newBounds = this.maxBounds.map((b, i) => {
-        if (i < 2) {
-          if (bounds[i] < b) {
-            isDifferent = true;
-            return bounds[i];
-          } else {
-            return b;
-          }
-        }
-        if (bounds[i] > b) {
-          isDifferent = true;
-          return bounds[i];
-        }
-        return b;
-      });
-    } else {
-      isDifferent = true;
-      newBounds = bounds;
-    }
-
-    this.maxBounds = newBounds;
-
-    return isDifferent;
-  };
-
   private BoundsChanged: MapEvent = debounce((map: any) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
-    const isGreaterThanMaxBounds = this.setMaxBounds(boundsArr);
 
     this.setMonuments(boundsArr);
-
-    if (isGreaterThanMaxBounds) {
-      this.props.getMonuments(boundsArr);
-    }
   }, 300);
 
   private onMouseEnter = (key: string) => {
@@ -190,6 +154,6 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
 export default connect((state: State) => ({
   monuments: state.monuments
 }), dispatch => ({
-  getMonuments: (latlng: number[]) => dispatch(getMonuments(latlng)),
+  getMonuments: () => dispatch(getMonuments()),
   fetchMonument: (id: string) => dispatch(fetchMonument(id))
 }))(Main);
