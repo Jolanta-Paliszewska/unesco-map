@@ -142,6 +142,8 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
           zoom={zoom}
           center={center}
           hoveredItem={hoveredItem}
+          onMouseEnter={this.onMouseEnter}
+          onMouseLeave={this.onMouseLeave}
           monuments={monuments}
           BoundsChanged={this.BoundsChanged}
           mapInit={this.mapInit}

@@ -22,6 +22,8 @@ export interface Props {
   zoom: number[];
   hoveredItem: string;
   onMonumentClick: (k: string) => void;
+  onMouseEnter: (key: string) => void;
+  onMouseLeave: () => void;
 }
 
 const cultureLayout: MonumentLayout = {
@@ -35,10 +37,12 @@ const natureLayout: MonumentLayout = {
 class UnescoMap extends React.Component<Props, void> {
   private markerHover = (key: string, { map }: any) => {
       map.getCanvas().style.cursor = 'pointer';
+      this.props.onMouseEnter(key);
   };
 
   private markerEndHover = (key: string, { map }: any) => {
       map.getCanvas().style.cursor = '';
+      this.props.onMouseLeave();
   };
 
   public render() {
