@@ -11,6 +11,7 @@ export interface Props {
 const styles = StyleSheet.create({
   container: {
     maxWidth: 200,
+    minWidth: 120,
     backgroundColor: colors.darkBlue,
     borderRadius: 5
   },

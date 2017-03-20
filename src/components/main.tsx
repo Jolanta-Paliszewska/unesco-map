@@ -3,7 +3,7 @@ import { MapEvent } from 'react-mapbox-gl/lib/map';
 import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
-import { MonumentDict, State } from '../reducers/index';
+import { MonumentDict, State, Monument } from '../reducers/index';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import { browserHistory, RouteComponentProps } from 'react-router';
@@ -23,6 +23,8 @@ interface StateComp {
   hoveredItem: string;
   center: [number, number];
   zoom: number[];
+  bounds: number[];
+  hoveredAnchor: string;
 };
 
 const styles = StyleSheet.create({
@@ -35,12 +37,13 @@ const defaultZoom = [6];
 const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
 
 class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>, StateComp> {
-
   public state = {
     hoveredItem: '',
     zoom: defaultZoom,
     center: defaultCenter,
-    filteredMonuments: []
+    filteredMonuments: [],
+    bounds: [],
+    hoveredAnchor: 'top'
   };
 
   public componentWillMount() {
@@ -71,11 +74,11 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
     this.props.getMonuments().then(() => {
-      this.setMonuments(boundsArr);
+      this.setMonumentsAndBounds(boundsArr);
     });
   };
 
-  private setMonuments = (bounds: number[]) => {
+  private setMonumentsAndBounds = (bounds: number[]) => {
     const { monuments } = this.props;
 
     this.setState({
@@ -84,7 +87,8 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
         const long = monuments[k].longitude;
 
         return lat > bounds[0] && long > bounds[1] && lat < bounds[2] && long < bounds[3];
-      })
+      }),
+      bounds
     });
   };
 
@@ -92,7 +96,7 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
-    this.setMonuments(boundsArr);
+    this.setMonumentsAndBounds(boundsArr);
   }, 300);
 
   private onMouseEnter = (key: string) => {
