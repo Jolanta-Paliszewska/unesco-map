@@ -42,13 +42,15 @@ const styles = StyleSheet.create({
 
 export interface Props {
   onSearch: React.ReactEventHandler<HTMLElement>;
+  onSelect: React.ReactEventHandler<HTMLElement>;
+  select: string[];
 }
 export interface State {}
 
 class Navigation extends React.Component<Props, State> {
 
   public render() {
-    const { onSearch } = this.props;
+    const { onSearch, onSelect, select } = this.props;
 
     return (
       <div className={css(styles.container)}>
@@ -60,10 +62,12 @@ class Navigation extends React.Component<Props, State> {
           <div className={css(styles.label)}>
             Sort:
           </div>
-          <select className={css(styles.select)}>
-            <option>Year</option>
-            <option>Countries</option>
-            <option>Name</option>
+          <select className={css(styles.select)} onChange={onSelect}>
+            {
+              select.map(val => (
+                <option key={val}>{val}</option>
+              ))
+            }
           </select>
         </div>
       </div>

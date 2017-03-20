@@ -27,12 +27,22 @@ export interface Props {
 
 export interface State {
   query: string;
+  sort: string;
 }
+
+const selectToField = {
+  Year: 'date_inscribed',
+  Name: 'site',
+  Country: 'location'
+};
+
+const select = Object.keys(selectToField);
 
 class SidepanList extends React.Component<Props, State> {
 
   public state = {
-    query: ''
+    query: '',
+    sort: selectToField[select[0]]
   };
 
   private onSearch = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,18 +51,26 @@ class SidepanList extends React.Component<Props, State> {
     });
   };
 
+  private onSelect = ({ target }: any) => {
+    this.setState({
+      sort: selectToField[target.value]
+    });
+  };
+
   public render() {
     const { filteredMonuments, onSelectItem, monuments, onMouseEnter, onMouseLeave } = this.props;
-    const { query } = this.state;
+    const { query, sort } = this.state;
+
+    console.log(sort);
 
     const monumentsFiltered = filteredMonuments
       .map((k: string) => monuments[k])
       .filter(monument => monument.site.toLowerCase().includes(query))
-      .sort((a, b) => a.date_inscribed > b.date_inscribed ? -1 : 1);
+      .sort((a, b) => a[sort] > b[sort] ? 1 : -1);
 
     return (
       <div className={css(styles.wrapper)}>
-        <Navigation onSearch={this.onSearch}/>
+        <Navigation onSearch={this.onSearch} onSelect={this.onSelect} select={select}/>
         <div className={css(styles.list)}>
           {
             monumentsFiltered.map((monument, index) => (
