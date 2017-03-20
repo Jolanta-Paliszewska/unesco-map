@@ -3,7 +3,7 @@ import { MapEvent } from 'react-mapbox-gl/lib/map';
 import { debounce } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
-import { MonumentDict, State, Monument } from '../reducers/index';
+import { MonumentDict, State } from '../reducers/index';
 import UnescoMap from './map';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import { browserHistory, RouteComponentProps } from 'react-router';
