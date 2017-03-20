@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
     maxHeight: '100vh'
   },
   list: {
-    flex: 9,
-    overflow: 'auto'
+    overflow: 'auto',
+    maxHeight: '94vh'
   }
 });
 

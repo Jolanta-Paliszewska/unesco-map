@@ -2,31 +2,41 @@ import * as React from 'react';
 import { css, StyleSheet } from 'aphrodite/no-important';
 import UnescoIcon from '../icons/unesco';
 import Search from './search';
+import { colors } from '../style';
 
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
     backgroundColor: 'white',
     display: 'flex',
-    boxShadow: 'inset 0 1px 0 0 #edeaea'
+    borderBottom: '1px solid #edeaea',
+    height: '6vh'
   },
   icon: {
-    minWidth: 74,
+    minWidth: 60,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRight: '1px solid #edeaea'
+  },
+  label: {
+    fontWeight: 400,
+    color: colors.darkBlue
   },
   selectContainer: {
     width: 112,
     display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderLeft: '1px solid #edeaea'
   },
   select: {
     flex: 1,
     border: 'none',
-    maxWidth: 47,
-    background: 'none'
+    background: 'none',
+    outline: 'none',
+    color: colors.darkBlue,
+    fontSize: 12,
+    maxWidth: 55
   }
 });
 
@@ -47,7 +57,7 @@ class Navigation extends React.Component<Props, State> {
         </div>
         <Search onChange={onSearch}/>
         <div className={css(styles.selectContainer)}>
-          <div>
+          <div className={css(styles.label)}>
             Sort:
           </div>
           <select className={css(styles.select)}>

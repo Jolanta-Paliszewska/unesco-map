@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
     border: 'none',
     fontSize: 12,
     paddingLeft: 36,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+    marginTop: 2
   },
   wrapper: {
     position: 'relative',
@@ -34,7 +35,7 @@ const Search: React.StatelessComponent<Props> = ({ onChange }) => (
     <input
       className={css(styles.input)}
       onChange={onChange}
-      placeholder="Search monument, country or region"/>
+      placeholder="Search site"/>
   </div>
 );
 
