@@ -59,7 +59,8 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     browserHistory.listen((ev) => {
       if (!ev.pathname.includes('detail')) {
         this.setState({
-          zoom: defaultZoom
+          zoom: defaultZoom,
+          hoveredItem: ''
         });
       }
     });
