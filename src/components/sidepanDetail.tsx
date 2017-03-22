@@ -75,6 +75,10 @@ class SidepanDetail extends React.Component<Props, void> {
     browserHistory.push('/');
   }
 
+  private onFullScreen = () => {
+    console.log('on fullscreen');
+  }
+
   public render() {
     const { monument } = this.props;
 
@@ -87,7 +91,7 @@ class SidepanDetail extends React.Component<Props, void> {
     return (
       <div className={css(styles.container)}>
         <div>
-          { hasPictures && <Slider pictures={monument.pictures}/> }
+          { hasPictures && <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> }
         </div>
         <div className={css(styles.monumentDetails)}>
           <div className={css(styles.leading)}>

@@ -8,6 +8,7 @@ import Left from '../icons/left';
 
 export interface Props {
   pictures: Picture[];
+  onFullScreen?: React.ReactEventHandler<SVGElement>;
 }
 
 export interface State {}
@@ -62,7 +63,7 @@ class Slider extends React.Component<Props, State> {
   }
 
   public render() {
-    const { pictures } = this.props;
+    const { pictures, onFullScreen } = this.props;
 
     return (
       <div className={css(styles.container)}>
@@ -81,7 +82,7 @@ class Slider extends React.Component<Props, State> {
             <Right/>
           </div>
           <div className={css(styles.icon)}>
-            <Fullscreen/>
+            <Fullscreen onClick={onFullScreen}/>
           </div>
         </div>
       </div>
