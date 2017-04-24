@@ -1,15 +1,20 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-import { Monument, State } from '../reducers/index';
+import { Monument, State as StateRoot } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as moment from 'moment';
 import Slider from './slider';
 import { colors } from '../style';
 import Back from '../icons/back';
+import Fullscreen from './fullscreen';
 
 export interface Props {
   monument: Monument;
+}
+
+interface State {
+  isFullscreen: boolean;
 }
 
 export interface RouteProps {
@@ -18,7 +23,7 @@ export interface RouteProps {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: 500,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -70,17 +75,31 @@ const styles = StyleSheet.create({
   }
 });
 
-class SidepanDetail extends React.Component<Props, void> {
+class SidepanDetail extends React.Component<Props, State> {
+
+  public state = {
+    isFullscreen: false
+  };
+
   private onGoBack = () => {
     browserHistory.push('/');
   }
 
   private onFullScreen = () => {
-    console.log('on fullscreen');
+    this.setState({
+      isFullscreen: true
+    });
+  }
+
+  private onDismissFullscreen = () => {
+    this.setState({
+      isFullscreen: false
+    });
   }
 
   public render() {
     const { monument } = this.props;
+    const { isFullscreen } = this.state;
 
     if (!monument) {
       return null;
@@ -90,6 +109,9 @@ class SidepanDetail extends React.Component<Props, void> {
 
     return (
       <div className={css(styles.container)}>
+        {
+          isFullscreen && <Fullscreen pictures={monument.pictures} onDismissFullscreen={this.onDismissFullscreen}/>
+        }
         <div>
           { hasPictures && <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> }
         </div>
@@ -114,6 +136,6 @@ class SidepanDetail extends React.Component<Props, void> {
   }
 }
 
-export default connect((state: State, props: any) => ({
+export default connect((state: StateRoot, props: any) => ({
   monument: state.monuments[props.params.id]
 }))(SidepanDetail);

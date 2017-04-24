@@ -61,8 +61,6 @@ class SidepanList extends React.Component<Props, State> {
     const { filteredMonuments, onSelectItem, monuments, onMouseEnter, onMouseLeave } = this.props;
     const { query, sort } = this.state;
 
-    console.log(sort);
-
     const monumentsFiltered = filteredMonuments
       .map((k: string) => monuments[k])
       .filter(monument => monument.site.toLowerCase().includes(query))

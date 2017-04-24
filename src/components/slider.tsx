@@ -16,13 +16,13 @@ export interface State {}
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    width: '100%',
+    // width: '100%',
     height: 300,
     overflowY: 'hidden',
     overflowX: 'auto'
   },
   slider: {
-    width: '100%',
+    // width: '100%',
     height: '100%'
   },
   controls: {
@@ -48,7 +48,8 @@ const settings = {
   infinite: true,
   speed: 500,
   slidesToShow: 1,
-  slidesToScroll: 1
+  slidesToScroll: 1,
+  arrows: false
 };
 
 class Slider extends React.Component<Props, State> {
