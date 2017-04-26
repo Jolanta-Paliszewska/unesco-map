@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
-    maxHeight: '100vh'
+    maxHeight: '100vh',
+    width: 520
   },
   list: {
     overflow: 'auto',

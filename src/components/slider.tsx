@@ -5,6 +5,7 @@ import { Picture } from '../reducers/index';
 import Fullscreen from '../icons/fullscreen';
 import Right from '../icons/right';
 import Left from '../icons/left';
+import { colors } from '../style';
 
 export interface Props {
   pictures: Picture[];
@@ -16,13 +17,12 @@ export interface State {}
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
-    // width: '100%',
     height: 300,
     overflowY: 'hidden',
-    overflowX: 'auto'
+    overflowX: 'auto',
+    backgroundColor: colors.lightGrey
   },
   slider: {
-    // width: '100%',
     height: '100%'
   },
   controls: {
@@ -41,6 +41,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     cursor: 'pointer',
     margin: 5
+  },
+  image: {
+    width: '100%',
+    margin: 'auto',
+    display: 'flex'
   }
 });
 
@@ -71,7 +76,9 @@ class Slider extends React.Component<Props, State> {
         <SlickSlider {...settings} className={css(styles.slider)} ref={c => this.slider = c }>
           {
             pictures.map((picture, index) => (
-              <img src={picture.url} key={index}/>
+              <div className={css(styles.image)}>
+                <img src={picture.url} key={index} style={{ margin: 'auto', maxHeight: 300 }}/>
+              </div>
             ))
           }
         </SlickSlider>

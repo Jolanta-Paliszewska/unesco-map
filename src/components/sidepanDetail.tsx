@@ -23,7 +23,7 @@ export interface RouteProps {
 
 const styles = StyleSheet.create({
   container: {
-    width: 500,
+    width: 520,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',

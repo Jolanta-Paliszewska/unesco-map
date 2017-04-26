@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Picture } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import * as SlickSlider from 'react-slick';
+import { Cross } from '../icons/cross';
 
 export interface Props {
   pictures?: Picture[];
@@ -30,6 +31,16 @@ const styles = StyleSheet.create({
     display: 'flex !important',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  crossContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    padding: 20,
+    opacity: 0.8
   }
 });
 
@@ -46,7 +57,7 @@ export default class Fullscreen extends React.Component<Props, void> {
 
     return (
       <div className={css(styles.container)}>
-        <div onClick={onDismissFullscreen}>close slider</div>
+        <div className={css(styles.crossContainer)}><Cross onClick={onDismissFullscreen}/></div>
         {
           pictures && (
             <SlickSlider {...settings} className={css(styles.slider)}>
