@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { css, StyleSheet } from 'aphrodite/no-important';
-import UnescoIcon from '../icons/unesco';
+import Logo from '../icons/logo';
 import Search from './search';
 import { colors } from '../style';
 
@@ -55,7 +55,7 @@ class Navigation extends React.Component<Props, State> {
     return (
       <div className={css(styles.container)}>
         <div className={css(styles.icon)}>
-          <UnescoIcon/>
+          <Logo/>
         </div>
         <Search onChange={onSearch}/>
         <div className={css(styles.selectContainer)}>

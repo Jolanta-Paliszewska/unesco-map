@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
-import { debounce } from 'lodash';
+import { throttle } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
 import { MonumentDict, State } from '../reducers/index';
@@ -21,7 +21,7 @@ interface Props {
 interface StateComp {
   filteredMonuments: string[];
   hoveredItem: string;
-  center: [number, number];
+  center: number[];
   zoom: number[];
   bounds: number[];
   hoveredAnchor: string;
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 });
 
 const defaultZoom = [6];
-const defaultCenter = [-0.2416815, 51.5285582] as [number, number];
+const defaultCenter = [-0.2416815, 51.5285582];
 
 class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>, StateComp> {
   public state = {
@@ -69,14 +69,14 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     });
   }
 
-  private mapInit: MapEvent = (map) => {
+  private mapInit: MapEvent = throttle((map: any) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
     this.props.getMonuments().then(() => {
       this.setMonumentsAndBounds(boundsArr);
     });
-  };
+  }, 500);
 
   private setMonumentsAndBounds = (bounds: number[]) => {
     const { monuments } = this.props;
@@ -92,12 +92,17 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     });
   };
 
-  private BoundsChanged: MapEvent = debounce((map: any) => {
+  private BoundsChanged: MapEvent = (map: any) => {
     const bounds = map.getBounds();
-    const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
+    const limitedBounds = map.unproject([60, 60]);
+
+    const hDiff = Math.abs(bounds.getNorth() - limitedBounds.lat);
+    const vDiff = Math.abs(bounds.getWest() - limitedBounds.lng);
+
+    const boundsArr = [bounds.getSouth() + hDiff, limitedBounds.lng, limitedBounds.lat, bounds.getEast() - vDiff];
 
     this.setMonumentsAndBounds(boundsArr);
-  }, 300);
+  };
 
   private onMouseEnter = (key: string) => {
     this.setState({
@@ -115,7 +120,7 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const selectedMonument = this.props.monuments[k];
 
     this.setState({
-      center: selectedMonument.latlng as [number, number],
+      center: selectedMonument.latlng,
       zoom: [11]
     });
 

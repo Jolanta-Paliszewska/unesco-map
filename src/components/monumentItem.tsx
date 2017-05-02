@@ -15,7 +15,6 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     padding: 16,
-    borderTop: `1px solid ${colors.lightGrey}`,
     borderBottom: `1px solid ${colors.lightGrey}`,
     cursor: 'pointer'
   },
@@ -30,6 +29,13 @@ const styles = StyleSheet.create({
     fontWeight: 300,
     marginTop: 6,
     lineHeight: '16px'
+  },
+  state: {
+    fontSize: 10,
+    fontWeight: 400,
+    textTransform: 'uppercase',
+    letterSpacing: '5 px',
+    color: '#808492'
   },
   image: {
     flex: 3,
@@ -53,7 +59,10 @@ const MonumentItem: React.StatelessComponent<Props> = ({ monument, onMouseEnter,
     }
     <div className={css(styles.description)}>
       <h1>{ monument.site }</h1>
-      <div className={css(styles.second)}>{ monument.states } | { moment(monument.date_inscribed).format('YYYY') }</div>
+      <div className={css(styles.second)}>
+        <span className={css(styles.state)}>{ monument.states }</span>
+        <span> | { moment(monument.date_inscribed).format('YYYY') }</span>
+      </div>
     </div>
     <div className={css(styles.image)}>
       <img src={monument.image_url}/>

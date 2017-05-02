@@ -9,12 +9,17 @@ export interface Props {
 const styles = StyleSheet.create({
   input: {
     width: '100%',
-    height: 40,
+    height: '100%',
     border: 'none',
     fontSize: 12,
     paddingLeft: 36,
     boxSizing: 'border-box',
-    marginTop: 2
+    color: '#A9AEBF',
+    fontWeight: 100,
+    '::placeholder': {
+      color: '#A9AEBF',
+      fontWeight: 100
+    }
   },
   wrapper: {
     position: 'relative',
