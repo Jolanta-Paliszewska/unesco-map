@@ -69,14 +69,14 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     });
   }
 
-  private mapInit: MapEvent = throttle((map: any) => {
+  private mapInit: MapEvent = (map: any) => {
     const bounds = map.getBounds();
     const boundsArr = [bounds.getSouth(), bounds.getWest(), bounds.getNorth(), bounds.getEast()];
 
     this.props.getMonuments().then(() => {
       this.setMonumentsAndBounds(boundsArr);
     });
-  }, 500);
+  };
 
   private setMonumentsAndBounds = (bounds: number[]) => {
     const { monuments } = this.props;
@@ -92,7 +92,7 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     });
   };
 
-  private BoundsChanged: MapEvent = (map: any) => {
+  private BoundsChanged: MapEvent = throttle((map: any) => {
     const bounds = map.getBounds();
     const limitedBounds = map.unproject([60, 60]);
 
@@ -102,7 +102,7 @@ class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>
     const boundsArr = [bounds.getSouth() + hDiff, limitedBounds.lng, limitedBounds.lat, bounds.getEast() - vDiff];
 
     this.setMonumentsAndBounds(boundsArr);
-  };
+  }, 500, { leading: true });
 
   private onMouseEnter = (key: string) => {
     this.setState({
