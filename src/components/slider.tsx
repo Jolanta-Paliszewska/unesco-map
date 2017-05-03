@@ -2,14 +2,13 @@ import * as React from 'react';
 import * as SlickSlider from 'react-slick';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { Picture } from '../reducers/index';
-import Fullscreen from '../icons/fullscreen';
 import Right from '../icons/right';
 import Left from '../icons/left';
 import { colors } from '../style';
 
 export interface Props {
   pictures: Picture[];
-  onFullScreen?: React.ReactEventHandler<SVGElement>;
+  onFullScreen?: React.ReactEventHandler<HTMLImageElement>;
 }
 
 export interface State {}
@@ -28,19 +27,20 @@ const styles = StyleSheet.create({
   controls: {
     position: 'absolute',
     display: 'flex',
-    right: 0,
-    bottom: 0
+    right: 10,
+    bottom: 10
   },
   icon: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     borderRadius: 5,
     cursor: 'pointer',
-    margin: 5
+    margin: 5,
+    paddingTop: 2
   },
   image: {
     width: '100%',
@@ -76,21 +76,18 @@ class Slider extends React.Component<Props, State> {
         <SlickSlider {...settings} className={css(styles.slider)} ref={c => this.slider = c }>
           {
             pictures.map((picture, index) => (
-              <div className={css(styles.image)}>
-                <img src={picture.url} key={index} style={{ margin: 'auto', maxHeight: 300 }}/>
+              <div className={css(styles.image)} key={index}>
+                <img src={picture.url} style={{ margin: 'auto', maxHeight: 300 }} onClick={onFullScreen}/>
               </div>
             ))
           }
         </SlickSlider>
         <div className={css(styles.controls)}>
           <div className={css(styles.icon)} onClick={this.onPrev}>
-            <Left/>
+            <Left size={20}/>
           </div>
           <div className={css(styles.icon)} onClick={this.onNext}>
-            <Right/>
-          </div>
-          <div className={css(styles.icon)}>
-            <Fullscreen onClick={onFullScreen}/>
+            <Right size={20}/>
           </div>
         </div>
       </div>

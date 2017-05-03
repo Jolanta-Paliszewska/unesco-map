@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import { Monument, State as StateRoot } from '../reducers/index';
 import { StyleSheet, css } from 'aphrodite/no-important';
-import * as moment from 'moment';
 import Slider from './slider';
 import { colors } from '../style';
 import Back from '../icons/back';
@@ -24,17 +23,20 @@ export interface RouteProps {
 const styles = StyleSheet.create({
   container: {
     width: 520,
-    height: '100%',
+    height: '100vh',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between'
   },
   monumentDetails: {
     padding: '20px 32px',
-    flex: 1
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column'
   },
   leading: {
-    color: colors.darkBlue
+    color: colors.darkBlue,
+    margin: '10px 0px'
   },
   title: {
     color: colors.darkBlue,
@@ -51,14 +53,13 @@ const styles = StyleSheet.create({
     fontWeight: 300,
     color: colors.darkBlue,
     marginTop: 12,
-    lineHeight: '22px'
+    lineHeight: '26px'
   },
   maxDescription: {
-    maxHeight: 230,
     overflow: 'auto'
   },
   footer: {
-    backgroundColor: colors.brokenWhite,
+    borderBottom: '1px solid #edeaea',
     height: 56,
     display: 'flex',
     alignItems: 'center'
@@ -66,9 +67,12 @@ const styles = StyleSheet.create({
   allSites: {
     display: 'flex',
     alignItems: 'center',
-    marginLeft: 32,
+    width: 56,
+    height: '100%',
+    justifyContent: 'center',
     fontWeight: 400,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    borderRight: '1px solid #edeaea'
   },
   back: {
     marginRight: 4
@@ -112,23 +116,19 @@ class SidepanDetail extends React.Component<Props, State> {
         {
           isFullscreen && <Fullscreen pictures={monument.pictures} onDismissFullscreen={this.onDismissFullscreen}/>
         }
+        <div className={css(styles.footer)}>
+          <div className={css(styles.allSites)} onClick={this.onGoBack}>
+            <Back className={css(styles.back)}/>
+          </div>
+        </div>
         <div>
           { hasPictures && <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> }
         </div>
         <div className={css(styles.monumentDetails)}>
-          <div className={css(styles.leading)}>
-            { monument.states }, { moment(monument.date_inscribed).format('YYYY') }
-          </div>
           <h1 className={css(styles.title)}>{monument.site}</h1>
-          <div className={css(styles.region)}>{ monument.region }</div>
+          <div className={css(styles.leading)}>{ monument.states }</div>
           <div className={css(styles.description, hasPictures && styles.maxDescription)}>
             { monument.short_description }
-          </div>
-        </div>
-        <div className={css(styles.footer)}>
-          <div className={css(styles.allSites)} onClick={this.onGoBack}>
-            <Back className={css(styles.back)}/>
-            All sites
           </div>
         </div>
       </div>
