@@ -13,7 +13,8 @@ var output = {
 // Add more files to copy to the dist folder (Eventually an assets folder)
 var toCopy = [
   { from: 'index.html' },
-  { from: 'Staticfile' }
+  { from: 'Staticfile' },
+  { from: 'favicons', to: 'favicons' }
 ];
 
 var plugins = [

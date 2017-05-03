@@ -53,9 +53,7 @@ const styles = StyleSheet.create({
     fontWeight: 300,
     color: colors.darkBlue,
     marginTop: 12,
-    lineHeight: '26px'
-  },
-  maxDescription: {
+    lineHeight: '26px',
     overflow: 'auto'
   },
   footer: {
@@ -122,12 +120,16 @@ class SidepanDetail extends React.Component<Props, State> {
           </div>
         </div>
         <div>
-          { hasPictures && <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> }
+          {
+            hasPictures ?
+              <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> :
+              <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=520%C3%97300&w=520&h=300"/>
+          }
         </div>
         <div className={css(styles.monumentDetails)}>
           <h1 className={css(styles.title)}>{monument.site}</h1>
           <div className={css(styles.leading)}>{ monument.states }</div>
-          <div className={css(styles.description, hasPictures && styles.maxDescription)}>
+          <div className={css(styles.description)}>
             { monument.short_description }
           </div>
         </div>
