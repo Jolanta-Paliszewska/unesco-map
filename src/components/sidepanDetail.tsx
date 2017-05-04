@@ -7,6 +7,7 @@ import Slider from './slider';
 import { colors } from '../style';
 import Back from '../icons/back';
 import Fullscreen from './fullscreen';
+const placeholder = require('../placeholder.png'); // tslint:disable-line
 
 export interface Props {
   monument: Monument;
@@ -123,7 +124,7 @@ class SidepanDetail extends React.Component<Props, State> {
           {
             hasPictures ?
               <Slider pictures={monument.pictures} onFullScreen={this.onFullScreen}/> :
-              <img src="https://placeholdit.imgix.net/~text?txtsize=33&txt=520%C3%97300&w=520&h=300"/>
+              <img src={`/${placeholder}`}/>
           }
         </div>
         <div className={css(styles.monumentDetails)}>
