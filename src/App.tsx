@@ -6,7 +6,6 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
-// import createLogger from 'redux-logger';
 
 import Main from './components/main';
 import SidepanList from './components/sidepanList';
@@ -15,13 +14,7 @@ import SidepanDetail from './components/sidepanDetail';
 import rootReducer from './reducers';
 import './common.css';
 
-declare var process: any;
-const env = process.env.NODE_ENV;
 const middlewares: Array<any> = [ thunk ];
-
-if (env === 'dev') {
-  // middlewares.push(createLogger());
-}
 
 const store = createStore(rootReducer, {}, applyMiddleware(...middlewares));
 const history = syncHistoryWithStore(browserHistory, store, {
