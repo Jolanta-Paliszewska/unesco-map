@@ -9,9 +9,12 @@ import { MonumentLayout } from './monumentLayer';
 const accessToken = 'pk.eyJ1IjoiYWxleDMxNjUiLCJhIjoiY2l6bjVhNmNzMDAwbjJxbnlsaHk0NDRzciJ9.FFqZuLjBHghDPkyp_1oMpA';
 const styles = {
   map: {
-    height: '100vh',
-    width: '100%'
-  }
+    position: 'absolute',
+    left: 500,
+    right: 0,
+    bottom: 0,
+    top: 0
+  } as React.CSSProperties
 };
 
 export interface Props {
