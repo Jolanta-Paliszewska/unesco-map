@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     maxHeight: '100vh',
-    width: 520
+    height: '100vh',
+    width: 500
   },
   list: {
     overflow: 'auto',

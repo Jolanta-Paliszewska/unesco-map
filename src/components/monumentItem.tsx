@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Monument } from '../reducers/index';
-import * as moment from 'moment';
 import { StyleSheet, css } from 'aphrodite/no-important';
 import { colors } from '../style';
 
@@ -61,7 +60,7 @@ const MonumentItem: React.StatelessComponent<Props> = ({ monument, onMouseEnter,
       <h1>{ monument.site }</h1>
       <div className={css(styles.second)}>
         <span className={css(styles.state)}>{ monument.states }</span>
-        <span> | { moment(monument.date_inscribed).format('YYYY') }</span>
+        <span> | { monument.date_inscribed }</span>
       </div>
     </div>
     <div className={css(styles.image)}>
