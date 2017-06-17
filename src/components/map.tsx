@@ -1,12 +1,15 @@
 import * as React from 'react';
 import MapPopup from './mapPopup';
-import { Map } from 'react-mapbox-gl';
+import ReactMapboxGl from 'react-mapbox-gl';
 import { MonumentDict } from '../reducers/index';
 import { MapEvent } from 'react-mapbox-gl/lib/map';
 import MonumentLayer from './monumentLayer';
 import { MonumentLayout } from './monumentLayer';
 
-const accessToken = 'pk.eyJ1IjoibG91aXNjdXJyaWUiLCJhIjoiY3MwR3B3QSJ9._5UXyjEIY0YisuAz9c_tJA';
+const Map = ReactMapboxGl({
+  accessToken: 'pk.eyJ1IjoibG91aXNjdXJyaWUiLCJhIjoiY3MwR3B3QSJ9._5UXyjEIY0YisuAz9c_tJA'
+});
+
 const mapStyle = 'mapbox://styles/louiscurrie/cizcq06l600292so15ydwjckr';
 
 const styles = {
@@ -61,7 +64,6 @@ class UnescoMap extends React.Component<Props, void> {
         zoom={zoom}
         center={center}
         style={mapStyle}
-        accessToken={accessToken}
         containerStyle={styles.map}
         onZoom={BoundsChanged}
         onStyleLoad={mapInit}
