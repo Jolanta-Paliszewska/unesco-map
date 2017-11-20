@@ -51,7 +51,7 @@ const settings = {
   slidesToScroll: 1
 };
 
-export default class Fullscreen extends React.Component<Props, void> {
+export default class Fullscreen extends React.Component<Props> {
   public render() {
     const { pictures, onDismissFullscreen } = this.props;
 

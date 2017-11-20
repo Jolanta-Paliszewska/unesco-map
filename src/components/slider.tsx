@@ -57,6 +57,8 @@ const settings = {
   arrows: false
 };
 
+const SliderComponent = (SlickSlider as any).default;
+
 class Slider extends React.Component<Props, State> {
   private slider: any;
 
@@ -73,7 +75,7 @@ class Slider extends React.Component<Props, State> {
 
     return (
       <div className={css(styles.container)}>
-        <SlickSlider {...settings} className={css(styles.slider)} ref={c => this.slider = c }>
+        <SliderComponent {...settings} className={css(styles.slider)} ref={(c: any) => this.slider = c }>
           {
             pictures.map((picture, index) => (
               <div className={css(styles.image)} key={index}>
@@ -81,7 +83,7 @@ class Slider extends React.Component<Props, State> {
               </div>
             ))
           }
-        </SlickSlider>
+        </SliderComponent>
         <div className={css(styles.controls)}>
           <div className={css(styles.icon)} onClick={this.onPrev}>
             <Left size={20}/>

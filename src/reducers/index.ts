@@ -48,7 +48,7 @@ export interface MonumentDict {
   [id: string]: Monument;
 }
 
-interface RThunkAction extends Action {
+export interface RThunkAction extends Action {
   payload: any;
   id?: string;
 };
@@ -91,6 +91,6 @@ const monuments = (state: MonumentDict = {}, { type, payload, id }: RThunkAction
 const reducers = combineReducers<State>({
   routing,
   monuments
-});
+}) as any;
 
 export default reducers;

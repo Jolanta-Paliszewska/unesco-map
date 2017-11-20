@@ -2,7 +2,7 @@ import * as React from 'react';
 import MapPopup from './mapPopup';
 import ReactMapboxGl from 'react-mapbox-gl';
 import { MonumentDict } from '../reducers/index';
-import { MapEvent } from 'react-mapbox-gl/lib/map';
+import { MapEvent } from 'react-mapbox-gl/lib/map-events';
 import MonumentLayer from './monumentLayer';
 import { MonumentLayout } from './monumentLayer';
 
@@ -27,7 +27,7 @@ export interface Props {
   BoundsChanged: MapEvent;
   mapInit: MapEvent;
   center: number[];
-  zoom: number[];
+  zoom: [number];
   hoveredItem: string;
   onMonumentClick: (k: string) => void;
   onMouseEnter: (key: string) => void;
@@ -42,7 +42,7 @@ const natureLayout: MonumentLayout = {
   'icon-image': 'nature'
 };
 
-class UnescoMap extends React.Component<Props, void> {
+class UnescoMap extends React.Component<Props> {
   private markerHover = (key: string, { map }: any) => {
       map.getCanvas().style.cursor = 'pointer';
       this.props.onMouseEnter(key);
@@ -69,9 +69,9 @@ class UnescoMap extends React.Component<Props, void> {
         onStyleLoad={mapInit}
         onMove={BoundsChanged}>
           {
-            hoveredItem && (
+            !!hoveredItem ? (
               <MapPopup monument={monuments[hoveredItem]}/>
-            )
+            ) : undefined
           }
           <MonumentLayer
             onMonumentClick={onMonumentClick}

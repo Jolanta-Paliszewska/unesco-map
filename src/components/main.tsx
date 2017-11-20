@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MapEvent } from 'react-mapbox-gl/lib/map';
+import { MapEvent } from 'react-mapbox-gl/lib/map-events';
 import { throttle } from 'lodash';
 import { connect } from 'react-redux';
 import { getMonuments } from '../actions/monument';
@@ -22,7 +22,7 @@ interface StateComp {
   filteredMonuments: string[];
   hoveredItem: string;
   center: number[];
-  zoom: number[];
+  zoom: [number];
   bounds: number[];
   hoveredAnchor: string;
 };
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const defaultZoom = [6];
+const defaultZoom: [number] = [6];
 const defaultCenter = [-0.2416815, 51.5285582];
 
 class Main extends React.Component<Props & RouteComponentProps<RouteProps, void>, StateComp> {
