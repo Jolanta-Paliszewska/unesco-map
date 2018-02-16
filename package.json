@@ -79,7 +79,7 @@
     "ramda": "^0.23.0",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
-    "react-mapbox-gl": "^3.1.0",
+    "react-mapbox-gl": "3.8.0",
     "react-motion": "^0.4.7",
     "react-photoswipe": "^1.2.0",
     "react-redux": "^5.0.6",
